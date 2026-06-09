@@ -1,0 +1,163 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Cutting blood shortage and waste through field research — Suchismita Naik</title>
+<style>
+  :root{
+    --bg:#f7f5f0; --bg-2:#fffdf8; --ink:#16161d; --ink-soft:#3f3f4a; --muted:#7a7a86;
+    --line:#e4dfd4; --accent:#e8634a;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    --maxw:1020px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.62;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  ::selection{background:var(--accent);color:#fff}
+  a{color:inherit}
+  .progress{position:fixed;top:0;left:0;height:3px;background:var(--accent);width:0;z-index:100;transition:width .1s linear}
+  nav{position:fixed;top:0;left:0;right:0;z-index:90;display:flex;justify-content:space-between;align-items:center;
+       padding:14px clamp(18px,5vw,52px);background:rgba(247,245,240,.82);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  nav .brand{font-weight:700;letter-spacing:.5px;font-size:14px;text-decoration:none}
+  nav .brand b{color:var(--accent)}
+  nav .links{display:flex;gap:20px}
+  nav .links a{font-size:13px;text-decoration:none;color:var(--ink-soft);font-weight:500;transition:color .2s}
+  nav .links a:hover{color:var(--accent)}
+  @media(max-width:640px){nav .links a:not(.home){display:none}}
+  section{padding:clamp(34px,5vw,58px) clamp(18px,5vw,52px)}
+  .wrap{max-width:var(--maxw);margin:0 auto}
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+  .eyebrow{font-size:11.5px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);font-weight:600;display:flex;align-items:center;gap:9px}
+  .eyebrow::before{content:"";width:22px;height:2px;background:var(--accent)}
+  h2.h{font-family:var(--serif);font-weight:400;font-size:clamp(24px,3.6vw,38px);letter-spacing:-.4px;margin:10px 0 18px}
+  /* hero */
+  .hero{padding-top:clamp(96px,12vw,140px);background:
+      radial-gradient(circle at 88% 12%,color-mix(in srgb,var(--accent) 12%,transparent),transparent 45%),
+      radial-gradient(circle at 8% 92%,color-mix(in srgb,var(--accent) 9%,transparent),transparent 48%)}
+  .cat{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--accent);
+        border:1px solid color-mix(in srgb,var(--accent) 40%,var(--line));border-radius:100px;padding:5px 13px}
+  .hero h1{font-family:var(--serif);font-weight:400;font-size:clamp(32px,6vw,62px);line-height:1.05;letter-spacing:-1px;margin:18px 0 0}
+  .hero .tag{font-size:clamp(16px,2.3vw,22px);color:var(--ink-soft);max-width:760px;margin-top:14px}
+  .metabar{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:34px;padding-top:26px;border-top:1px solid var(--line)}
+  @media(max-width:640px){.metabar{grid-template-columns:repeat(2,1fr);gap:16px}}
+  .metabar .k{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);font-weight:600}
+  .metabar .v{font-size:14px;font-weight:600;margin-top:4px}
+  /* tldr */
+  .tldr{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  @media(max-width:760px){.tldr{grid-template-columns:1fr}}
+  .tcard{background:var(--bg-2);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:22px}
+  .tcard .k{font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:9px}
+  .tcard p{font-size:14.5px;color:var(--ink-soft)}
+  /* prose */
+  .prose p{font-size:16px;color:var(--ink-soft);margin-bottom:14px;max-width:820px}
+  .prose p b{color:var(--ink)}
+  .quote{font-family:var(--serif);font-size:clamp(19px,2.6vw,27px);line-height:1.4;color:var(--ink);
+          border-left:3px solid var(--accent);padding:6px 0 6px 22px;margin:22px 0;max-width:820px}
+  /* method / tradeoff */
+  .method{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+  @media(max-width:760px){.method{grid-template-columns:1fr}}
+  .chosen{background:color-mix(in srgb,var(--accent) 9%,var(--bg-2));border:1px solid color-mix(in srgb,var(--accent) 30%,var(--line));border-radius:12px;padding:22px}
+  .chosen .lab{font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--accent);font-weight:700}
+  .chosen h4{font-size:18px;margin:6px 0 8px}
+  .chosen p{font-size:14.5px;color:var(--ink-soft)}
+  .alts{border:1px solid var(--line);border-radius:12px;padding:8px 22px;background:var(--bg-2)}
+  .alts .lab{font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);font-weight:700;padding:14px 0 4px}
+  .alt{padding:12px 0;border-top:1px solid var(--line)}
+  .alt:first-of-type{border-top:none}
+  .alt .n{font-weight:700;font-size:14px}
+  .alt .w{font-size:13.5px;color:var(--muted);margin-top:2px}
+  .alt .w b{color:var(--ink-soft);font-weight:600}
+  /* insights */
+  .ins{display:flex;flex-direction:column;gap:0}
+  .insrow{display:grid;grid-template-columns:34px 1fr;gap:16px;padding:18px 0;border-top:1px solid var(--line)}
+  .insrow:first-child{border-top:none}
+  .insrow .no{font-family:var(--serif);font-size:22px;color:var(--accent);line-height:1.2}
+  .insrow .it{font-size:16.5px;font-weight:700;letter-spacing:-.2px}
+  .insrow .ev{font-size:14px;color:var(--muted);margin-top:5px}
+  .insrow .ev b{color:var(--ink-soft);font-weight:600}
+  /* impact */
+  .impact{background:#13131b;color:#f2f0e9;border-radius:18px;padding:clamp(26px,4vw,40px)}
+  .impact .eyebrow{color:#a9a7a0}
+  .impact h2.h{color:#fff}
+  .impact ul{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:14px 26px;margin-top:6px}
+  @media(max-width:680px){.impact ul{grid-template-columns:1fr}}
+  .impact li{position:relative;padding-left:26px;font-size:15px;color:#d9d7cf}
+  .impact li::before{content:"→";position:absolute;left:0;color:var(--accent);font-weight:700}
+  .impact li b{color:#fff}
+  /* stats */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+  @media(max-width:680px){.stats{grid-template-columns:repeat(2,1fr)}}
+  .st .n{font-family:var(--serif);font-size:clamp(30px,4.6vw,46px);color:var(--accent);line-height:1}
+  .st .l{font-size:13px;color:var(--muted);margin-top:8px}
+  /* reflection */
+  .reflect{border:1px dashed color-mix(in srgb,var(--accent) 45%,var(--line));border-radius:14px;padding:clamp(22px,3vw,32px);background:var(--bg-2)}
+  .reflect .eyebrow::before{background:var(--accent)}
+  .reflect p{font-size:15.5px;color:var(--ink-soft);margin-bottom:12px;max-width:820px}
+  .reflect p b{color:var(--ink)}
+  /* note / template banner */
+  .note{background:#fff6e6;border:1px solid #f0d28a;border-radius:12px;padding:16px 20px;font-size:14px;color:#7a5b13;max-width:880px}
+  .note b{color:#5e4609}
+  .blank{background:color-mix(in srgb,var(--accent) 12%,#fff);border-bottom:2px solid var(--accent);
+          padding:0 4px;border-radius:3px;font-weight:600;color:var(--ink)}
+  /* image */
+  figure{margin:6px 0}
+  figure img{width:100%;max-height:640px;object-fit:contain;border:1px solid var(--line);border-radius:12px;display:block;background:var(--bg-2)}
+  figcaption{font-size:13px;color:var(--muted);margin-top:8px}
+  .gal{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+  @media(max-width:640px){.gal{grid-template-columns:1fr}}
+  .gal figure img{height:248px;object-fit:contain;padding:8px}
+  .imgfail{width:100%;height:220px;border:1px solid var(--line);border-radius:12px;
+            background:linear-gradient(135deg,var(--accent),#13131b);display:flex;align-items:flex-end;
+            color:rgba(255,255,255,.92);font-size:13px;padding:14px}
+  /* footer nav */
+  .pager{display:flex;justify-content:space-between;gap:14px;border-top:1px solid var(--line);padding-top:26px;margin-top:10px;flex-wrap:wrap}
+  .pager a{text-decoration:none;font-size:14px;font-weight:600;color:var(--ink-soft);transition:color .2s}
+  .pager a:hover{color:var(--accent)}
+  footer{padding:30px;text-align:center;font-size:12px;color:var(--muted)}
+  footer a{color:var(--muted)}
+</style></head><body>
+<div class="progress" id="pg"></div>
+<nav>
+  <a class="brand home" href="../index.html">SUCHI<b>.</b>NAIK</a>
+  <div class="links">
+    <a class="home" href="../index.html#work">← Back to portfolio</a>
+    <a href="../index.html#research">Research</a>
+    <a href="mailto:naik.suchismita@gmail.com">Contact</a>
+  </div>
+</nav>
+<header class="hero"><div class="wrap reveal">
+  <span class="cat">UX Research + Design</span>
+  <h1>Cutting blood shortage and waste through field research</h1>
+  <p class="tag">Ethnographic field research across donors, recipients, and blood banks that exposed a predictable supply–demand gap — and a smart-inventory service now approved and in execution by the Nashik city council.</p>
+  <div class="metabar"><div><div class="k">My role</div><div class="v">Design Researcher</div></div><div><div class="k">Timeline</div><div class="v">2016 · 10 wk</div></div><div><div class="k">Org</div><div class="v">TCS Digital Impact Square × MIT Media Lab</div></div><div><div class="k">Methods</div><div class="v">Ethnography, shadowing, 100 surveys, service design</div></div></div>
+</div></header>
+<section><div class="wrap reveal"><div class="tldr">
+      <div class="tcard"><div class="k">The problem</div><p>India needs 40M+ units of blood a year, yet information on availability is poor and supply is mismatched to demand — so emergencies turn into desperate searches while collected blood expires unused.</p></div>
+      <div class="tcard"><div class="k">Research question</div><p>Where exactly does the blood-bank system break across donors, recipients, and banks — and where is the highest-leverage place to intervene?</p></div>
+      <div class="tcard"><div class="k">Outcome</div><p>A smart-inventory + camp-prediction system, validated as most feasible of three concepts, approved by the Nashik city council and in execution.</p></div>
+    </div></div></section><section><div class="wrap reveal prose"><h2 class="h">The systemic problem</h2><p>In a city of ~1.4M with only 13 under-equipped blood banks, the gap between supply and demand was structural, not random. I worked in a two-person team and led the design research end to end.</p><p>I deliberately scoped from the national problem down to one city, because a life-or-death systems problem can only be fixed where you can actually observe its mechanics.</p></div></section><section><div class="wrap reveal">
+      <div class="eyebrow">Research judgment</div>
+      <h2 class="h">Why deep field ethnography</h2>
+      <div class="method">
+        <div class="chosen"><div class="lab">Method I chose</div><h4>Secondary research + ecosystem mapping → shadowing donors and nurses, interviews with 7 blood-bank in-charges, surveys of ~100 residents → empathy & affinity mapping</h4><p>This is a behavior-and-coordination problem invisible from a desk. Shadowing in donation camps and maternity wards revealed real practice; interviews with in-charges exposed operational constraints; surveys quantified donor barriers. Together they located the gap precisely.</p><p style="margin-top:14px"><b>Constraints I balanced:</b> Ten weeks and two people meant I sequenced secondary research first to focus scarce field time, and analyzed across five lenses (process, people, technology, policy, communication) to avoid a narrow fix.</p></div>
+        <div class="alts"><div class="lab">Alternatives I considered</div><div class="alt"><div class="n">Build a donor-matching app (the obvious answer)</div><div class="w"><b>Why not:</b> Existing apps already did this and failed — they served only one link in the chain. Research showed the leverage was in <i>inventory</i>, not matching.</div></div><div class="alt"><div class="n">Survey-only</div><div class="w"><b>Why not:</b> Would quantify donor reluctance but miss the operational waste (expiry, camp planning) that field observation uncovered.</div></div></div>
+      </div></div></section><section><div class="wrap reveal">
+      <div class="eyebrow">What we learned</div>
+      <h2 class="h">Key insights</h2>
+      <div class="ins"><div class="insrow"><div class="no">01</div><div><div class="it">Waste and shortage coexisted — a planning failure</div><div class="ev"><b>Evidence:</b> Of 152 units collected in one window, 31 expired (35-day shelf life) even amid high demand; camp timing, not donor supply, was the root cause.</div></div></div><div class="insrow"><div class="no">02</div><div><div class="it">Demand was predictable</div><div class="ev"><b>Evidence:</b> Demand spiked in June and October (monsoon, dengue); collection peaked in winter — a seasonal mismatch a prediction tool could close.</div></div></div><div class="insrow"><div class="no">03</div><div><div class="it">Point solutions fail a connected system</div><div class="ev"><b>Evidence:</b> Market analysis showed competitors each served one stakeholder; the system needed inventory intelligence linking donors, banks, and hospitals.</div></div></div></div></div></section><section><div class="wrap reveal"><div class="eyebrow">From the project</div><h2 class="h">Field research → system</h2><div class="gal"><figure><img loading="lazy" src="https://static.wixstatic.com/media/2e8b7f_0fa386bfbe6f46129c8c18763f42b66e~mv2_d_3000_1815_s_2.png" alt="Ecosystem mapping of the blood-bank system." data-cap="Ecosystem mapping of the blood-bank system."><figcaption>Ecosystem mapping of the blood-bank system.</figcaption></figure><figure><img loading="lazy" src="https://static.wixstatic.com/media/2e8b7f_46ad2b67816d41768f2d8ebe269ca6f3~mv2.png" alt="Supply vs. demand — a predictable, seasonal gap." data-cap="Supply vs. demand — a predictable, seasonal gap."><figcaption>Supply vs. demand — a predictable, seasonal gap.</figcaption></figure><figure><img loading="lazy" src="https://static.wixstatic.com/media/2e8b7f_47bc5c108c3c4f2d85970f98b3814c1c~mv2_d_2518_2063_s_2.png" alt="Prediction tool for camp planning (final UI)." data-cap="Prediction tool for camp planning (final UI)."><figcaption>Prediction tool for camp planning (final UI).</figcaption></figure></div></div></section><section><div class="wrap reveal"><div class="impact">
+      <div class="eyebrow">Impact over activity</div>
+      <h2 class="h">What changed</h2>
+      <ul><li><b>Approved by the Nashik city council and in execution</b> — research translated into a deployed service.</li><li>Concept-tested three subsystems; the smart-inventory + camp-prediction tool won on feasibility, impact, and business viability.</li><li>Reframed the problem from 'recruit more donors' to 'predict and plan supply' — a higher-leverage bet.</li><li>Designed for the real operators (inventory in-charge, camp organizer), not an idealized user.</li></ul></div></div></section><section><div class="wrap reveal"><div class="reflect">
+      <div class="eyebrow">If I did it again</div>
+      <h2 class="h" style="margin-bottom:14px">Reflection &amp; self-critique</h2>
+      <p><b>What I'd change:</b> I'd build a lightweight pilot of the prediction tool with one bank's historical data to quantify waste reduction before the council review — evidence over projection.</p><p><b>What I'd keep:</b> Resisting the obvious 'donor app.' Letting field research overturn the assumed solution is what made the outcome real.</p><p><b>What I learned:</b> In systems problems, the leverage point is rarely where the pain is loudest — here, it was quiet operational planning, not donor recruitment.</p></div></div></section>
+<section><div class="wrap"><div class="pager"><a href="case-sensex.html">← Twenty years of the stock market, told as a story</a><a href="case-forever-27.html">The Forever 27 Club: data as empathy →</a></div></div></section>
+<footer>Suchismita Naik · UX Researcher · <a href="mailto:naik.suchismita@gmail.com">naik.suchismita@gmail.com</a> · <a href="https://www.linkedin.com/in/suchismitanaik/">LinkedIn</a></footer>
+<script>
+const pg=document.getElementById('pg');
+addEventListener('scroll',()=>{const h=document.documentElement;pg.style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';},{passive:true});
+const io=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target);}}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+document.querySelectorAll('figure img').forEach(im=>{im.addEventListener('error',()=>{const d=document.createElement('div');d.className='imgfail';d.textContent=im.dataset.cap||'';im.replaceWith(d);});});
+</script>
+</body></html>

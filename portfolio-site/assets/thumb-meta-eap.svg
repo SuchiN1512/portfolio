@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 270" width="480" height="270" role="img" aria-label="12-week longitudinal Early Adopter Program, 86 issues tracked">
+  <defs>
+    <linearGradient id="bg2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#15917f"/>
+      <stop offset="1" stop-color="#2747c9"/>
+    </linearGradient>
+  </defs>
+  <rect width="480" height="270" fill="url(#bg2)"/>
+  <g stroke="#ffffff" stroke-opacity="0.07" stroke-width="1">
+    <path d="M0 67H480M0 135H480M0 202H480"/>
+  </g>
+  <!-- issue bars across 12 weeks (some P0 highlighted) -->
+  <g>
+    <rect x="44"  y="150" width="20" height="46" rx="3" fill="#ffffff" fill-opacity="0.55"/>
+    <rect x="76"  y="120" width="20" height="76" rx="3" fill="#ffffff" fill-opacity="0.55"/>
+    <rect x="108" y="96"  width="20" height="100" rx="3" fill="#ff7a5c"/>
+    <rect x="140" y="132" width="20" height="64" rx="3" fill="#ffffff" fill-opacity="0.55"/>
+    <rect x="172" y="84"  width="20" height="112" rx="3" fill="#ff7a5c"/>
+    <rect x="204" y="110" width="20" height="86" rx="3" fill="#ffffff" fill-opacity="0.55"/>
+    <rect x="236" y="138" width="20" height="58" rx="3" fill="#ffffff" fill-opacity="0.55"/>
+    <rect x="268" y="100" width="20" height="96" rx="3" fill="#ff7a5c"/>
+    <rect x="300" y="126" width="20" height="70" rx="3" fill="#ffffff" fill-opacity="0.55"/>
+    <rect x="332" y="150" width="20" height="46" rx="3" fill="#ffffff" fill-opacity="0.55"/>
+  </g>
+  <!-- baseline -->
+  <line x1="36" y1="196" x2="420" y2="196" stroke="#ffffff" stroke-opacity="0.5" stroke-width="1.5"/>
+  <!-- 6 session markers -->
+  <g>
+    <g fill="#ffffff">
+      <circle cx="44" cy="196" r="6"/>
+      <circle cx="120" cy="196" r="6"/>
+      <circle cx="196" cy="196" r="6"/>
+      <circle cx="272" cy="196" r="6"/>
+      <circle cx="348" cy="196" r="6"/>
+      <circle cx="412" cy="196" r="6"/>
+    </g>
+  </g>
+  <!-- legend dot -->
+  <g font-family="Inter, Arial, sans-serif">
+    <rect x="28" y="28" width="118" height="24" rx="12" fill="#ffffff" fill-opacity="0.16"/>
+    <text x="87" y="44" text-anchor="middle" font-size="12" font-weight="800" fill="#ffffff">12 WEEKS · 6 SESSIONS</text>
+    <circle cx="360" cy="40" r="6" fill="#ff7a5c"/>
+    <text x="372" y="44" font-size="12" font-weight="700" fill="#ffffff" fill-opacity="0.92">P0</text>
+  </g>
+  <text x="28" y="250" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="800" letter-spacing="1.5" fill="#ffffff">86 ISSUES · 27 CRITICAL</text>
+</svg>

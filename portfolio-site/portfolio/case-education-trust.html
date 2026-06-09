@@ -1,0 +1,163 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>When the numbers and the stories disagree — Suchismita Naik</title>
+<style>
+  :root{
+    --bg:#f7f5f0; --bg-2:#fffdf8; --ink:#16161d; --ink-soft:#3f3f4a; --muted:#7a7a86;
+    --line:#e4dfd4; --accent:#e8634a;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    --maxw:1020px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.62;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  ::selection{background:var(--accent);color:#fff}
+  a{color:inherit}
+  .progress{position:fixed;top:0;left:0;height:3px;background:var(--accent);width:0;z-index:100;transition:width .1s linear}
+  nav{position:fixed;top:0;left:0;right:0;z-index:90;display:flex;justify-content:space-between;align-items:center;
+       padding:14px clamp(18px,5vw,52px);background:rgba(247,245,240,.82);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  nav .brand{font-weight:700;letter-spacing:.5px;font-size:14px;text-decoration:none}
+  nav .brand b{color:var(--accent)}
+  nav .links{display:flex;gap:20px}
+  nav .links a{font-size:13px;text-decoration:none;color:var(--ink-soft);font-weight:500;transition:color .2s}
+  nav .links a:hover{color:var(--accent)}
+  @media(max-width:640px){nav .links a:not(.home){display:none}}
+  section{padding:clamp(34px,5vw,58px) clamp(18px,5vw,52px)}
+  .wrap{max-width:var(--maxw);margin:0 auto}
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+  .eyebrow{font-size:11.5px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);font-weight:600;display:flex;align-items:center;gap:9px}
+  .eyebrow::before{content:"";width:22px;height:2px;background:var(--accent)}
+  h2.h{font-family:var(--serif);font-weight:400;font-size:clamp(24px,3.6vw,38px);letter-spacing:-.4px;margin:10px 0 18px}
+  /* hero */
+  .hero{padding-top:clamp(96px,12vw,140px);background:
+      radial-gradient(circle at 88% 12%,color-mix(in srgb,var(--accent) 12%,transparent),transparent 45%),
+      radial-gradient(circle at 8% 92%,color-mix(in srgb,var(--accent) 9%,transparent),transparent 48%)}
+  .cat{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--accent);
+        border:1px solid color-mix(in srgb,var(--accent) 40%,var(--line));border-radius:100px;padding:5px 13px}
+  .hero h1{font-family:var(--serif);font-weight:400;font-size:clamp(32px,6vw,62px);line-height:1.05;letter-spacing:-1px;margin:18px 0 0}
+  .hero .tag{font-size:clamp(16px,2.3vw,22px);color:var(--ink-soft);max-width:760px;margin-top:14px}
+  .metabar{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:34px;padding-top:26px;border-top:1px solid var(--line)}
+  @media(max-width:640px){.metabar{grid-template-columns:repeat(2,1fr);gap:16px}}
+  .metabar .k{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);font-weight:600}
+  .metabar .v{font-size:14px;font-weight:600;margin-top:4px}
+  /* tldr */
+  .tldr{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  @media(max-width:760px){.tldr{grid-template-columns:1fr}}
+  .tcard{background:var(--bg-2);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:22px}
+  .tcard .k{font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:9px}
+  .tcard p{font-size:14.5px;color:var(--ink-soft)}
+  /* prose */
+  .prose p{font-size:16px;color:var(--ink-soft);margin-bottom:14px;max-width:820px}
+  .prose p b{color:var(--ink)}
+  .quote{font-family:var(--serif);font-size:clamp(19px,2.6vw,27px);line-height:1.4;color:var(--ink);
+          border-left:3px solid var(--accent);padding:6px 0 6px 22px;margin:22px 0;max-width:820px}
+  /* method / tradeoff */
+  .method{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+  @media(max-width:760px){.method{grid-template-columns:1fr}}
+  .chosen{background:color-mix(in srgb,var(--accent) 9%,var(--bg-2));border:1px solid color-mix(in srgb,var(--accent) 30%,var(--line));border-radius:12px;padding:22px}
+  .chosen .lab{font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--accent);font-weight:700}
+  .chosen h4{font-size:18px;margin:6px 0 8px}
+  .chosen p{font-size:14.5px;color:var(--ink-soft)}
+  .alts{border:1px solid var(--line);border-radius:12px;padding:8px 22px;background:var(--bg-2)}
+  .alts .lab{font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);font-weight:700;padding:14px 0 4px}
+  .alt{padding:12px 0;border-top:1px solid var(--line)}
+  .alt:first-of-type{border-top:none}
+  .alt .n{font-weight:700;font-size:14px}
+  .alt .w{font-size:13.5px;color:var(--muted);margin-top:2px}
+  .alt .w b{color:var(--ink-soft);font-weight:600}
+  /* insights */
+  .ins{display:flex;flex-direction:column;gap:0}
+  .insrow{display:grid;grid-template-columns:34px 1fr;gap:16px;padding:18px 0;border-top:1px solid var(--line)}
+  .insrow:first-child{border-top:none}
+  .insrow .no{font-family:var(--serif);font-size:22px;color:var(--accent);line-height:1.2}
+  .insrow .it{font-size:16.5px;font-weight:700;letter-spacing:-.2px}
+  .insrow .ev{font-size:14px;color:var(--muted);margin-top:5px}
+  .insrow .ev b{color:var(--ink-soft);font-weight:600}
+  /* impact */
+  .impact{background:#13131b;color:#f2f0e9;border-radius:18px;padding:clamp(26px,4vw,40px)}
+  .impact .eyebrow{color:#a9a7a0}
+  .impact h2.h{color:#fff}
+  .impact ul{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:14px 26px;margin-top:6px}
+  @media(max-width:680px){.impact ul{grid-template-columns:1fr}}
+  .impact li{position:relative;padding-left:26px;font-size:15px;color:#d9d7cf}
+  .impact li::before{content:"→";position:absolute;left:0;color:var(--accent);font-weight:700}
+  .impact li b{color:#fff}
+  /* stats */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+  @media(max-width:680px){.stats{grid-template-columns:repeat(2,1fr)}}
+  .st .n{font-family:var(--serif);font-size:clamp(30px,4.6vw,46px);color:var(--accent);line-height:1}
+  .st .l{font-size:13px;color:var(--muted);margin-top:8px}
+  /* reflection */
+  .reflect{border:1px dashed color-mix(in srgb,var(--accent) 45%,var(--line));border-radius:14px;padding:clamp(22px,3vw,32px);background:var(--bg-2)}
+  .reflect .eyebrow::before{background:var(--accent)}
+  .reflect p{font-size:15.5px;color:var(--ink-soft);margin-bottom:12px;max-width:820px}
+  .reflect p b{color:var(--ink)}
+  /* note / template banner */
+  .note{background:#fff6e6;border:1px solid #f0d28a;border-radius:12px;padding:16px 20px;font-size:14px;color:#7a5b13;max-width:880px}
+  .note b{color:#5e4609}
+  .blank{background:color-mix(in srgb,var(--accent) 12%,#fff);border-bottom:2px solid var(--accent);
+          padding:0 4px;border-radius:3px;font-weight:600;color:var(--ink)}
+  /* image */
+  figure{margin:6px 0}
+  figure img{width:100%;max-height:640px;object-fit:contain;border:1px solid var(--line);border-radius:12px;display:block;background:var(--bg-2)}
+  figcaption{font-size:13px;color:var(--muted);margin-top:8px}
+  .gal{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+  @media(max-width:640px){.gal{grid-template-columns:1fr}}
+  .gal figure img{height:248px;object-fit:contain;padding:8px}
+  .imgfail{width:100%;height:220px;border:1px solid var(--line);border-radius:12px;
+            background:linear-gradient(135deg,var(--accent),#13131b);display:flex;align-items:flex-end;
+            color:rgba(255,255,255,.92);font-size:13px;padding:14px}
+  /* footer nav */
+  .pager{display:flex;justify-content:space-between;gap:14px;border-top:1px solid var(--line);padding-top:26px;margin-top:10px;flex-wrap:wrap}
+  .pager a{text-decoration:none;font-size:14px;font-weight:600;color:var(--ink-soft);transition:color .2s}
+  .pager a:hover{color:var(--accent)}
+  footer{padding:30px;text-align:center;font-size:12px;color:var(--muted)}
+  footer a{color:var(--muted)}
+</style></head><body>
+<div class="progress" id="pg"></div>
+<nav>
+  <a class="brand home" href="../index.html">SUCHI<b>.</b>NAIK</a>
+  <div class="links">
+    <a class="home" href="../index.html#work">← Back to portfolio</a>
+    <a href="../index.html#research">Research</a>
+    <a href="mailto:naik.suchismita@gmail.com">Contact</a>
+  </div>
+</nav>
+<header class="hero"><div class="wrap reveal">
+  <span class="cat">UX Research · Mixed Methods</span>
+  <h1>When the numbers and the stories disagree</h1>
+  <p class="tag">A mixed-methods study where the quantitative signal pointed one way and the qualitative story pointed the opposite — a working example of why a single method can quietly mislead a decision.</p>
+  <div class="metabar"><div><div class="k">My role</div><div class="v">Researcher (solo)</div></div><div><div class="k">Timeline</div><div class="v">2023 · Purdue</div></div><div><div class="k">Org</div><div class="v">Graduate research</div></div><div><div class="k">Methods</div><div class="v">Survey analysis (GSS, n=1,820) + 20 in-depth interviews</div></div></div>
+</div></header>
+<section><div class="wrap reveal"><div class="tldr">
+      <div class="tcard"><div class="k">The problem</div><p>A widely-held assumption — that more education simply produces more social trust — was being treated as settled. If you only looked at the survey, you'd ship a decision on it.</p></div>
+      <div class="tcard"><div class="k">Research question</div><p>Does education level predict how much people trust others — and if the numbers say yes, do people's actual experiences agree?</p></div>
+      <div class="tcard"><div class="k">Outcome</div><p>Showed the quant-only conclusion was misleading: the qualitative data refuted it, demonstrating why triangulation beats a single confident metric.</p></div>
+    </div></div></section><section><div class="wrap reveal prose"><h2 class="h">Why this is a UX research story, not just a school project</h2><p>Swap 'education and trust' for any product metric and a behavioral driver, and this is a problem teams hit constantly: <b>a clean quantitative signal that points to a confident — and wrong — conclusion.</b> I treated it as a test of method, not a sociology paper.</p><p>Working with 2021 General Social Survey data (n=1,820 after cleaning), the cross-tab was tidy: higher education, higher trust. The tempting move is to stop there. Instead I asked whether real experiences would corroborate the number — and designed the qual phase specifically to <i>try to break</i> the finding.</p></div></section><section><div class="wrap reveal">
+      <div class="eyebrow">Research judgment</div>
+      <h2 class="h">Why explanatory mixed-methods, in this order</h2>
+      <div class="method">
+        <div class="chosen"><div class="lab">Method I chose</div><h4>Quant first to establish the pattern → qual interviews to explain (and stress-test) it</h4><p>The survey could show <i>whether</i> a relationship existed but never <i>why</i>. I ran 20 in-depth interviews (ages 20–69), asked the same trust question as the GSS so I could compare like-for-like, then used inductive coding to find what the number hid.</p><p style="margin-top:14px"><b>Constraints I balanced:</b> A solo researcher on a course timeline — so I prioritized depth (45-min interviews, transcribed and coded by hand) over a larger sample, and was explicit about that limit in the conclusions.</p></div>
+        <div class="alts"><div class="lab">Alternatives I considered</div><div class="alt"><div class="n">Report the survey result alone</div><div class="w"><b>Why not:</b> Fast and 'clean' — and exactly the trap. It would have shipped a confident, wrong conclusion.</div></div><div class="alt"><div class="n">Qual-only interviews</div><div class="w"><b>Why not:</b> Rich, but with no baseline pattern to explain or contradict; the tension between methods is the whole insight.</div></div><div class="alt"><div class="n">A bigger survey</div><div class="w"><b>Why not:</b> More precision on the same misleading signal; precision isn't the same as truth.</div></div></div>
+      </div></div></section><section><div class="wrap reveal">
+      <div class="eyebrow">What we learned</div>
+      <h2 class="h">What the two methods, together, revealed</h2>
+      <div class="ins"><div class="insrow"><div class="no">01</div><div><div class="it">The qualitative data refuted the quantitative conclusion</div><div class="ev"><b>Evidence:</b> 17 of 20 participants reported their trust had <i>changed</i> over time; 14 said it <b>declined</b> — including all high-school graduates, even those who rated their trust as high in the survey-style question.</div></div></div><div class="insrow"><div class="no">02</div><div><div class="it">Education's effect ran both directions</div><div class="ev"><b>Evidence:</b> Of the 11 who tied trust change to education, 8 became <i>less</i> trusting (exposure to social diversity, identity theft, betrayal), 1 more trusting, 2 ambiguous — the opposite of the tidy 'more education → more trust' line.</div></div></div><div class="insrow"><div class="no">03</div><div><div class="it">The real drivers sat outside the model</div><div class="ev"><b>Evidence:</b> Early-life environment, personality, and lived disadvantage outweighed the degree itself — variables the survey never captured.</div></div></div></div></div></section><section><div class="wrap reveal"><div class="eyebrow">From the project</div><h2 class="h">From the study</h2><div class="gal"><figure><img loading="lazy" src="https://static.wixstatic.com/media/2e8b7f_4c41add83f804410b0f277b1348d639c~mv2.png" alt="Quantitative cross-tabulation (2021 GSS, n=1,820): the tidy 'more education → more trust' signal." data-cap="Quantitative cross-tabulation (2021 GSS, n=1,820): the tidy 'more education → more trust' signal."><figcaption>Quantitative cross-tabulation (2021 GSS, n=1,820): the tidy 'more education → more trust' signal.</figcaption></figure><figure><img loading="lazy" src="https://static.wixstatic.com/media/2e8b7f_7abc8af1bca8437bad6cd3d9c2e1761a~mv2.png" alt="Qualitative coding: 14 of 17 participants reported declining trust over time — the opposite pattern." data-cap="Qualitative coding: 14 of 17 participants reported declining trust over time — the opposite pattern."><figcaption>Qualitative coding: 14 of 17 participants reported declining trust over time — the opposite pattern.</figcaption></figure><figure><img loading="lazy" src="https://static.wixstatic.com/media/2e8b7f_a63b265253e3440ab894a4343cb3fc95~mv2.png" alt="Interview analysis of how education actually shaped trust change." data-cap="Interview analysis of how education actually shaped trust change."><figcaption>Interview analysis of how education actually shaped trust change.</figcaption></figure></div></div></section><section><div class="wrap reveal"><div class="impact">
+      <div class="eyebrow">Impact over activity</div>
+      <h2 class="h">Why it matters for product work</h2>
+      <ul><li><b>A method demonstration with a transferable lesson:</b> a single clean metric can be confidently wrong; triangulate before you decide.</li><li>Modeled disciplined, decision-grade synthesis: same instrument across methods, inductive coding, honest contradiction.</li><li>Shows I'll <b>stress-test a flattering result</b> rather than ship the convenient narrative.</li><li>Directly relevant to AI/product work where dashboards look decisive but mask the human 'why'.</li></ul></div></div></section><section><div class="wrap reveal"><div class="reflect">
+      <div class="eyebrow">If I did it again</div>
+      <h2 class="h" style="margin-bottom:14px">Reflection &amp; self-critique</h2>
+      <p><b>What I'd change:</b> I'd add a short follow-up survey to the interview sample to quantify the qualitative themes — closing the loop from quant→qual→quant rather than stopping at the contradiction.</p><p><b>What I'd keep:</b> Designing the qual phase to actively challenge the quant finding. Setting out to <i>break</i> a result is the fastest way to learn whether to trust it.</p><p><b>Honest limit:</b> n=20 is directional, not generalizable — and I said so. Naming the boundary is part of the rigor.</p></div></div></section>
+<section><div class="wrap"><div class="pager"><a href="case-meta-strategy.html">← Cross-platform concept testing for Business AI monetization</a><a href="case-bts-community.html">How strangers become a community online →</a></div></div></section>
+<footer>Suchismita Naik · UX Researcher · <a href="mailto:naik.suchismita@gmail.com">naik.suchismita@gmail.com</a> · <a href="https://www.linkedin.com/in/suchismitanaik/">LinkedIn</a></footer>
+<script>
+const pg=document.getElementById('pg');
+addEventListener('scroll',()=>{const h=document.documentElement;pg.style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';},{passive:true});
+const io=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target);}}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+document.querySelectorAll('figure img').forEach(im=>{im.addEventListener('error',()=>{const d=document.createElement('div');d.className='imgfail';d.textContent=im.dataset.cap||'';im.replaceWith(d);});});
+</script>
+</body></html>

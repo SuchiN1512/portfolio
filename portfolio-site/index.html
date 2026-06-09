@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Suchismita Naik — UX Researcher</title>
+<style>
+  :root{
+    --bg:#f7f5f0;
+    --bg-2:#fffdf8;
+    --ink:#16161d;
+    --ink-soft:#444450;
+    --muted:#7a7a86;
+    --line:#e3ded3;
+    --blue:#2b50e0;
+    --teal:#1f9c8a;
+    --amber:#f0a23b;
+    --coral:#e8634a;
+    --violet:#7a52c9;
+    --maxw:1080px;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--sans);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--amber);color:#16161d}
+  a{color:inherit}
+
+  /* progress + nav */
+  .progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--blue),var(--teal),var(--amber),var(--coral));width:0;z-index:100;transition:width .1s linear}
+  nav{position:fixed;top:0;left:0;right:0;z-index:90;display:flex;justify-content:space-between;align-items:center;padding:16px clamp(20px,5vw,56px);mix-blend-mode:difference}
+  nav .brand{font-weight:700;letter-spacing:.5px;color:#fff;font-size:14px}
+  nav .links{display:flex;gap:22px}
+  nav .links a{color:#fff;text-decoration:none;font-size:13px;opacity:.85;transition:opacity .2s}
+  nav .links a:hover{opacity:1}
+  @media(max-width:680px){nav .links{display:none}}
+
+  section{padding:clamp(64px,9vw,128px) clamp(20px,5vw,56px);position:relative}
+  .wrap{max-width:var(--maxw);margin:0 auto}
+
+  .reveal{opacity:0;transform:translateY(28px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+
+  .eyebrow{font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);font-weight:600;display:flex;align-items:center;gap:10px}
+  .eyebrow::before{content:"";width:26px;height:2px;background:var(--coral)}
+
+  /* HERO */
+  .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;background:
+     radial-gradient(circle at 85% 18%,rgba(43,80,224,.07),transparent 42%),
+     radial-gradient(circle at 12% 85%,rgba(31,156,138,.08),transparent 45%);
+     overflow:hidden}
+  #plot{position:absolute;inset:0;width:100%;height:100%;opacity:.5;pointer-events:none}
+  .hero .wrap{position:relative;z-index:2}
+  .hero h1{font-family:var(--serif);font-weight:400;font-size:clamp(40px,8vw,92px);line-height:1.02;letter-spacing:-1px;margin:18px 0 6px}
+  .hero h1 .accent{font-style:italic;color:var(--blue)}
+  .hero .role{font-size:clamp(17px,2.4vw,24px);color:var(--ink-soft);font-weight:500;max-width:640px;margin-top:14px}
+  .hero .role b{color:var(--ink);font-weight:700}
+  .hero .meta{margin-top:30px;display:flex;flex-wrap:wrap;gap:10px}
+  .pill{border:1px solid var(--line);background:rgba(255,255,255,.6);backdrop-filter:blur(4px);border-radius:100px;padding:7px 15px;font-size:13px;color:var(--ink-soft);font-weight:500}
+  .pill .dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:7px;vertical-align:middle}
+  .scroll-cue{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);z-index:3;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:8px}
+  .scroll-cue .bar{width:1px;height:34px;background:linear-gradient(var(--muted),transparent);animation:cue 1.8s infinite}
+  @keyframes cue{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}50.1%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+  /* STATS */
+  .stats{background:var(--ink);color:#f7f5f0}
+  .stats .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(20px,4vw,48px)}
+  @media(max-width:760px){.stats .grid{grid-template-columns:repeat(2,1fr);gap:32px}}
+  .stat .num{font-family:var(--serif);font-size:clamp(40px,6vw,68px);line-height:1;font-weight:400}
+  .stat .num .suf{font-size:.5em;color:var(--amber);margin-left:2px}
+  .stat .lab{font-size:13px;color:#b9b7b0;margin-top:10px;letter-spacing:.3px}
+  .stat:nth-child(1) .num{color:var(--amber)}
+  .stat:nth-child(2) .num{color:var(--teal)}
+  .stat:nth-child(3) .num{color:#7e9bff}
+  .stat:nth-child(4) .num{color:var(--coral)}
+
+  /* NARRATIVE */
+  .lead{font-family:var(--serif);font-size:clamp(24px,3.6vw,40px);line-height:1.32;font-weight:400;letter-spacing:-.3px;max-width:920px}
+  .lead .hl{background:linear-gradient(transparent 62%,rgba(240,162,59,.45) 0);padding:0 2px}
+  .lead .q{color:var(--blue);font-style:italic}
+  .sig{margin-top:34px;display:flex;align-items:center;gap:16px;font-size:14px;color:var(--muted)}
+  .sig .line{flex:0 0 40px;height:1px;background:var(--line)}
+
+  /* TIMELINE (data-viz) */
+  .tl-head{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;margin-bottom:42px}
+  .tl-head h2{font-family:var(--serif);font-weight:400;font-size:clamp(28px,4.4vw,46px);letter-spacing:-.5px}
+  .legend{display:flex;gap:16px;flex-wrap:wrap}
+  .legend span{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
+  .legend i{width:10px;height:10px;border-radius:2px;display:inline-block}
+  .timeline{position:relative}
+  .timeline::before{content:"";position:absolute;left:118px;top:6px;bottom:6px;width:2px;background:var(--line)}
+  @media(max-width:640px){.timeline::before{left:64px}}
+  .row{display:grid;grid-template-columns:118px 1fr;gap:0;position:relative;padding:14px 0}
+  @media(max-width:640px){.row{grid-template-columns:64px 1fr}}
+  .row .yr{font-size:13px;color:var(--muted);font-weight:600;padding-top:2px;text-align:right;padding-right:26px}
+  @media(max-width:640px){.row .yr{padding-right:18px;font-size:11px}}
+  .row .body{padding-left:30px;position:relative}
+  .row .node{position:absolute;left:-7px;top:6px;width:13px;height:13px;border-radius:50%;background:var(--bg);border:3px solid var(--blue);transition:transform .3s}
+  .row:hover .node{transform:scale(1.35)}
+  .row .org{font-weight:700;font-size:16px}
+  .row .pos{font-size:14px;color:var(--ink-soft)}
+  .row .note{font-size:13px;color:var(--muted);margin-top:3px;max-width:560px}
+  .tag{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.3px;padding:2px 9px;border-radius:100px;margin-top:8px;margin-right:6px}
+
+  /* WORK / projects */
+  .work h2{font-family:var(--serif);font-weight:400;font-size:clamp(28px,4.4vw,46px);letter-spacing:-.5px;margin-bottom:8px}
+  .work .sub{color:var(--muted);max-width:640px;margin-bottom:40px}
+  .group{font-family:var(--serif);font-weight:400;font-size:clamp(20px,3vw,30px);letter-spacing:-.3px;margin:0 0 22px;padding-bottom:12px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:11px}
+  .group .gc{font-size:12px;font-family:var(--sans);font-weight:600;letter-spacing:.4px;color:var(--muted)}
+  .group::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--coral);flex:0 0 auto}
+  .group.gd::before{background:var(--teal)}
+  .cards + .group{margin-top:58px}
+  .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:26px}
+  @media(max-width:760px){.cards{grid-template-columns:1fr}}
+  .card{background:var(--bg-2);border:1px solid var(--line);border-radius:16px;overflow:hidden;text-decoration:none;color:inherit;display:flex;flex-direction:column;transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s}
+  .card:hover{transform:translateY(-6px);box-shadow:0 22px 50px -24px rgba(22,22,29,.4)}
+  .card.feat{grid-column:1/-1;flex-direction:row}
+  @media(max-width:760px){.card.feat{flex-direction:column}}
+  .card .ph{aspect-ratio:16/9;background:#e9e4d8 center/cover no-repeat;position:relative;overflow:hidden}
+  .card.feat .ph{flex:0 0 52%;aspect-ratio:auto;min-height:280px}
+  .card .ph img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+  .card:hover .ph img{transform:scale(1.05)}
+  .card .ph .badge{position:absolute;top:12px;left:12px;background:rgba(22,22,29,.82);color:#fff;font-size:11px;font-weight:600;letter-spacing:.4px;padding:5px 11px;border-radius:100px;backdrop-filter:blur(3px)}
+  .card .c-body{padding:22px 24px 26px;display:flex;flex-direction:column;flex:1}
+  .card.feat .c-body{justify-content:center;padding:34px 38px}
+  .card h3{font-size:19px;font-weight:700;letter-spacing:-.2px;line-height:1.25}
+  .card.feat h3{font-size:25px}
+  .card .meta-line{font-size:12px;color:var(--blue);font-weight:600;letter-spacing:.4px;margin:9px 0 11px;text-transform:uppercase}
+  .card p{font-size:14px;color:var(--ink-soft);flex:1}
+  .card .go{margin-top:16px;font-size:13px;font-weight:600;color:var(--ink);display:flex;align-items:center;gap:7px}
+  .card .go .arr{transition:transform .3s}
+  .card:hover .go .arr{transform:translateX(5px)}
+
+  /* RESEARCH */
+  .research{background:linear-gradient(180deg,#101019,#16161d);color:#f1efe8}
+  .research h2{font-family:var(--serif);font-weight:400;font-size:clamp(28px,4.4vw,46px);letter-spacing:-.5px;color:#fff}
+  .research .sub{color:#a9a7a0;max-width:680px;margin:10px 0 44px}
+  .rgrid{display:grid;grid-template-columns:1.1fr .9fr;gap:46px}
+  @media(max-width:820px){.rgrid{grid-template-columns:1fr;gap:34px}}
+  .pub{padding:18px 0;border-top:1px solid rgba(255,255,255,.12)}
+  .pub:first-child{border-top:none}
+  .pub .venue{font-size:11px;font-weight:700;letter-spacing:1px;color:var(--amber);text-transform:uppercase}
+  .pub .ttl{font-size:15px;font-weight:600;margin-top:5px;line-height:1.35;color:#f1efe8}
+  .pub .ttl a{color:inherit;text-decoration:none;border-bottom:1px solid rgba(241,239,232,.25)}
+  .pub .ttl a:hover{border-color:var(--amber)}
+  .rside{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:30px}
+  .rside h4{font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:#a9a7a0;margin-bottom:18px}
+  .rside .big{font-family:var(--serif);font-size:22px;line-height:1.4;color:#fff;font-weight:400}
+  .venues{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+  .venues span{font-size:12px;font-weight:600;border:1px solid rgba(255,255,255,.18);border-radius:100px;padding:5px 12px;color:#d8d6ce}
+  .morebtn{display:inline-block;margin-top:26px;font-size:13px;font-weight:600;color:#16161d;background:var(--amber);padding:11px 20px;border-radius:100px;text-decoration:none;transition:transform .2s}
+  .morebtn:hover{transform:translateY(-2px)}
+
+  /* METHODS */
+  .methods h2{font-family:var(--serif);font-weight:400;font-size:clamp(28px,4.4vw,46px);letter-spacing:-.5px;margin-bottom:44px}
+  .mgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  @media(max-width:760px){.mgrid{grid-template-columns:1fr}}
+  .m{border:1px solid var(--line);border-radius:14px;padding:26px;background:var(--bg-2)}
+  .m .ic{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;color:#fff;margin-bottom:16px}
+  .m h4{font-size:16px;font-weight:700;margin-bottom:8px}
+  .m p{font-size:13.5px;color:var(--ink-soft)}
+  .m .tools{margin-top:14px;font-size:12px;color:var(--muted)}
+
+  /* CONTACT */
+  .contact{background:var(--ink);color:#f7f5f0;text-align:center}
+  .contact h2{font-family:var(--serif);font-weight:400;font-size:clamp(32px,6vw,64px);letter-spacing:-.8px;line-height:1.1}
+  .contact h2 .accent{font-style:italic;color:var(--amber)}
+  .contact p{color:#b9b7b0;max-width:520px;margin:20px auto 0}
+  .clinks{display:flex;justify-content:center;flex-wrap:wrap;gap:14px;margin-top:36px}
+  .clinks a{text-decoration:none;border:1px solid rgba(255,255,255,.22);color:#f7f5f0;padding:13px 24px;border-radius:100px;font-size:14px;font-weight:600;transition:all .25s}
+  .clinks a:hover{background:#f7f5f0;color:#16161d}
+  .clinks a.primary{background:var(--amber);color:#16161d;border-color:var(--amber)}
+  .clinks a.primary:hover{transform:translateY(-2px)}
+  footer{padding:30px;text-align:center;font-size:12px;color:var(--muted)}
+  footer a{color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<nav>
+  <div class="brand">SN</div>
+  <div class="links">
+    <a href="#story">Story</a>
+    <a href="#work">Work</a>
+    <a href="#path">Path</a>
+    <a href="#research">Publication</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero" id="top">
+  <canvas id="plot"></canvas>
+  <div class="wrap">
+    <div class="eyebrow reveal">UX Researcher · HCI + AI · Data Storyteller</div>
+    <h1 class="reveal">Suchismita <span class="accent">Naik</span></h1>
+    <p class="role reveal">I find the <b>insight behind the data</b> and turn it into products people actually understand. UX researcher at the intersection of <b>human–AI interaction</b>, mixed-methods research, and visual storytelling.</p>
+    <div class="meta reveal">
+      <span class="pill"><span class="dot" style="background:var(--blue)"></span>UX Researcher · Meta</span>
+      <span class="pill"><span class="dot" style="background:var(--teal)"></span>PhD, HCI — Purdue</span>
+      <span class="pill"><span class="dot" style="background:var(--amber)"></span>ex-Microsoft Research</span>
+      <span class="pill"><span class="dot" style="background:var(--coral)"></span>Menlo Park, CA</span>
+    </div>
+  </div>
+  <div class="scroll-cue"><span>scroll</span><span class="bar"></span></div>
+</header>
+
+<!-- STATS -->
+<section class="stats">
+  <div class="wrap grid">
+    <div class="stat reveal"><div class="num" data-to="8"><span>0</span><span class="suf">+ yrs</span></div><div class="lab">across UX research & design</div></div>
+    <div class="stat reveal"><div class="num" data-to="20"><span>0</span><span class="suf"></span></div><div class="lab">peer-reviewed papers & talks</div></div>
+    <div class="stat reveal"><div class="num" data-to="7"><span>0</span><span class="suf"></span></div><div class="lab">industries: health, finance, gov, AI</div></div>
+    <div class="stat reveal"><div class="num" data-to="3"><span>0</span><span class="suf"></span></div><div class="lab">global research markets</div></div>
+  </div>
+</section>
+
+<!-- NARRATIVE -->
+<section id="story">
+  <div class="wrap">
+    <div class="eyebrow reveal" style="margin-bottom:28px">The short version</div>
+    <p class="lead reveal">A resume tells you <span class="q">what</span> I did. This tells you <span class="hl">how I think</span>.<br><br>
+    I spend my time getting close to people — through cross-market interviews, diary studies, and field work — then translate the messy, human truth into research that shapes <span class="hl">how AI products get built</span>. Before research, I was a designer and data visualizer, so I don't just hand over findings. I make them <span class="q">impossible to ignore</span>.</p>
+  </div>
+</section>
+
+<!-- WORK -->
+<section class="work" id="work">
+  <div class="wrap">
+    <div class="eyebrow reveal" style="margin-bottom:16px">Selected work</div>
+    <h2 class="reveal">Research you can see</h2>
+    <p class="sub reveal">Across these projects: generative &amp; foundational research, evaluative &amp; usability studies, longitudinal programs, cross-market and cross-platform studies, mixed-methods, survey &amp; statistical analysis, concept testing, and data-driven design research. Each card opens a full case study.</p>
+
+    <h3 class="group reveal">UX Research</h3>
+    <div class="cards">
+
+      <a class="card reveal" href="portfolio/case-meta-ai-product.html">
+        <div class="ph"><img loading="lazy" src="assets/thumb-meta-northstar.svg" alt="North Star AI vision across two markets"><span class="badge">Generative · AI Strategy</span></div>
+        <div class="c-body">
+          <h3>Defining the North Star AI vision for WhatsApp Business</h3>
+          <div class="meta-line">Generative Research · AI Strategy · Meta</div>
+          <p>A two-market generative study (Mexico + India) that decided what AI should <em>be</em> for small businesses — shaping modality, branding, and monetization for a product serving millions.</p>
+          <span class="go">Read the case study <span class="arr">→</span></span>
+        </div>
+      </a>
+
+      <a class="card reveal" href="portfolio/case-meta-cross-market.html">
+        <div class="ph"><img loading="lazy" src="assets/thumb-meta-eap.svg" alt="12-week longitudinal Early Adopter Program in India"><span class="badge">Longitudinal · 12 weeks</span></div>
+        <div class="c-body">
+          <h3>A 12-week longitudinal Early Adopter Program (India)</h3>
+          <div class="meta-line">Longitudinal Research · Sole owner · Meta</div>
+          <p>Embedded with 8 real Indian SMBs over 12 weeks to de-risk a global Business-AI launch — logging 86 issues and surfacing the #1 retention risk before rollout.</p>
+          <span class="go">Read the case study <span class="arr">→</span></span>
+        </div>
+      </a>
+
+      <a class="card reveal" href="portfolio/case-meta-strategy.html">
+        <div class="ph"><img loading="lazy" src="assets/thumb-meta-monetization.svg" alt="Cross-platform monetization concept testing"><span class="badge">Concept Testing · Monetization</span></div>
+        <div class="c-body">
+          <h3>Cross-platform concept testing for Business AI monetization</h3>
+          <div class="meta-line">Concept Testing · Cross-platform · Meta</div>
+          <p>Cross-platform research (WhatsApp Mexico + Messenger Philippines) that validated — then redirected — the subscription model behind Meta's Business AI monetization strategy.</p>
+          <span class="go">Read the case study <span class="arr">→</span></span>
+        </div>
+      </a>
+
+      <a class="card reveal" href="portfolio/case-education-trust.html">
+        <div class="ph"><img loading="lazy" src="https://static.wixstatic.com/media/2e8b7f_8b058d79345140389eb00a2d8500c4b0~mv2.jpg" alt="Mixed-methods study of education and trust"><span class="badge">Mixed Methods · Quant + Qual</span></div>
+        <div class="c-body">
+          <h3>When the numbers and the stories disagree</h3>
+          <div class="meta-line">Mixed-Methods Research · Survey + Interviews</div>
+          <p>A study where the quantitative signal pointed one way and the qualitative story proved the opposite — a working lesson in why a single metric can mislead a decision.</p>
+          <span class="go">Read the case study <span class="arr">→</span></span>
+        </div>
+      </a>
+
+    </div>
+
+    <h3 class="group gd reveal">UX Research + Design</h3>
+    <div class="cards">
+
+      <a class="card feat reveal" href="portfolio/case-1mg-healthcare.html">
+        <div class="ph"><img loading="lazy" src="https://static.wixstatic.com/media/2e8b7f_6758a73b96814144bc955c0b4b88841e~mv2.png" alt="e-Healthcare ecosystem redesign"><span class="badge">Service Design · 1 year</span></div>
+        <div class="c-body">
+          <h3>Redesigning the e-Healthcare ecosystem</h3>
+          <div class="meta-line">UX Research · Service Design · Conversational UX</div>
+          <p>Deep user research across the 1mg patient–doctor ecosystem, then a redesign of e-consultation: a conversational platform that lets patients and doctors actually communicate. From insight to interaction, end to end.</p>
+          <span class="go">Read the case study <span class="arr">→</span></span>
+        </div>
+      </a>
+
+      <a class="card reveal" href="portfolio/case-open-budgets.html">
+        <div class="ph"><img loading="lazy" src="https://static.wixstatic.com/media/2e8b7f_f7ca665bc59246ffa816a941899bb86c~mv2.jpg" alt="Open Budgets India"><span class="badge">Data Viz · 8 months</span></div>
+        <div class="c-body">
+          <h3>Open Budgets India & story generator</h3>
+          <div class="meta-line">Information Design · Data Visualization</div>
+          <p>With the Centre for Budget and Governance Accountability — visualizing five-dimensional state budget data and a portal that turns public budgets into stories anyone can read.</p>
+          <span class="go">Read the case study <span class="arr">→</span></span>
+        </div>
+      </a>
+
+      <a class="card reveal" href="portfolio/case-blood-bank.html">
+        <div class="ph"><img loading="lazy" src="https://static.wixstatic.com/media/2e8b7f_de0de07ffba24bb9a94fb13d9efe9a6b~mv2.jpg" alt="Blood bank system design"><span class="badge">System Design · 10 weeks</span></div>
+        <div class="c-body">
+          <h3>Zero loss of life from blood shortage</h3>
+          <div class="meta-line">Design Research · Systems</div>
+          <p>With TCS Digital Impact Square & MIT Media Lab — mapping the blood-bank system end to end and designing interventions for its most critical, life-or-death gaps.</p>
+          <span class="go">Read the case study <span class="arr">→</span></span>
+        </div>
+      </a>
+
+      <a class="card reveal" href="portfolio/case-sensex.html">
+        <div class="ph"><img loading="lazy" src="https://static.wixstatic.com/media/2e8b7f_31aa9062f2f5476ca77c07b5556be566~mv2.png" alt="Sensex narrative visualization"><span class="badge">Data Viz · Honorable mention</span></div>
+        <div class="c-body">
+          <h3>A narrative of the Indian stock market</h3>
+          <div class="meta-line">Data Visualization · Storytelling</div>
+          <p>Two decades of the Sensex mapped against the events that moved it — published at IndiaHCI and exhibited at IEEE EuroVis.</p>
+          <span class="go">Read the case study <span class="arr">→</span></span>
+        </div>
+      </a>
+
+      <a class="card reveal" href="portfolio/case-forever-27.html">
+        <div class="ph"><img loading="lazy" src="https://static.wixstatic.com/media/2e8b7f_990b061d2e1742a4a079091823154077~mv2.png" alt="Forever 27 Club visualization"><span class="badge">Data Viz · 4 weeks</span></div>
+        <div class="c-body">
+          <h3>The Forever 27 Club</h3>
+          <div class="meta-line">Data Visualization · Awareness</div>
+          <p>A narrative visualization of musicians who died at 27 — built so people discover their own stories in the data, and reflect on what it reveals.</p>
+          <span class="go">Read the case study <span class="arr">→</span></span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section id="path" style="background:var(--bg-2)">
+  <div class="wrap">
+    <div class="tl-head reveal">
+      <h2>The path here</h2>
+      <div class="legend">
+        <span><i style="background:var(--blue)"></i>Research</span>
+        <span><i style="background:var(--teal)"></i>Design research</span>
+        <span><i style="background:var(--amber)"></i>Academia</span>
+      </div>
+    </div>
+    <div class="timeline">
+      <div class="row reveal"><div class="yr">2025 — now</div><div class="body"><span class="node" style="border-color:var(--blue)"></span><div class="org">Meta · Menlo Park, CA</div><div class="pos">User Experience Researcher (WhatsApp)</div><div class="note">AI product research, cross-market qualitative studies, and translating user insight into business strategy.</div><span class="tag" style="background:rgba(43,80,224,.12);color:var(--blue)">Human–AI interaction</span><span class="tag" style="background:rgba(43,80,224,.12);color:var(--blue)">Cross-market</span></div></div>
+
+      <div class="row reveal"><div class="yr">2024</div><div class="body"><span class="node" style="border-color:var(--blue)"></span><div class="org">Microsoft Research · Redmond, WA</div><div class="pos">UX Researcher — Internship</div><div class="note">Studied early adopters of multi-agent generative AI tools to inform human–agent interaction design.</div><span class="tag" style="background:rgba(43,80,224,.12);color:var(--blue)">Multi-agent GenAI</span><span class="tag" style="background:rgba(43,80,224,.12);color:var(--blue)">Mental models</span><span class="tag" style="background:rgba(43,80,224,.12);color:var(--blue)">Mixed-method</span></div></div>
+
+      <div class="row reveal"><div class="yr">2021 — 25</div><div class="body"><span class="node" style="border-color:var(--amber)"></span><div class="org">Purdue University · West Lafayette, IN</div><div class="pos">PhD, HCI (UX) & Technology-mediated Communication · Andrews Fellow</div><div class="note">Community-Computer Interaction Lab. Dissertation on multi-agent design patterns for fostering sense of belonging in online communities: insights from fandom communities and AI practitioners; certificate in Qualitative Research.</div><span class="tag" style="background:rgba(240,162,59,.16);color:#b97a16">Mixed method</span><span class="tag" style="background:rgba(240,162,59,.16);color:#b97a16">Design research</span></div></div>
+
+      <div class="row reveal"><div class="yr">2020 — 21</div><div class="body"><span class="node" style="border-color:var(--teal)"></span><div class="org">Gramener · Bangalore, India</div><div class="pos">Lead Information Designer</div><div class="note">Turned client data into decision-driving visualizations and data products.</div><span class="tag" style="background:rgba(31,156,138,.14);color:var(--teal)">Data viz</span><span class="tag" style="background:rgba(31,156,138,.14);color:var(--teal)">Leadership</span></div></div>
+
+      <div class="row reveal"><div class="yr">2018 — 20</div><div class="body"><span class="node" style="border-color:var(--blue)"></span><div class="org">Conduent Labs (Xerox Research Centre India)</div><div class="pos">Senior Research Scientist</div><div class="note">HCI research bridging emerging technology and real-world user needs.</div><span class="tag" style="background:rgba(43,80,224,.12);color:var(--blue)">Applied HCI</span></div></div>
+
+      <div class="row reveal"><div class="yr">2016 — 18</div><div class="body"><span class="node" style="border-color:var(--teal)"></span><div class="org">1mg Technologies · Gurugram, India</div><div class="pos">UX Researcher / Designer</div><div class="note">Researched and redesigned the patient–doctor e-healthcare ecosystem, including conversational e-consultation.</div><span class="tag" style="background:rgba(31,156,138,.14);color:var(--teal)">Service design</span><span class="tag" style="background:rgba(31,156,138,.14);color:var(--teal)">Healthcare</span></div></div>
+
+      <div class="row reveal"><div class="yr">2014 — 16</div><div class="body"><span class="node" style="border-color:var(--amber)"></span><div class="org">National Institute of Design · Bangalore</div><div class="pos">M.Des — Information & UX Design</div><div class="note">Foundations in design research, information design, and data storytelling.</div></div></div>
+
+      <div class="row reveal"><div class="yr">2008 — 13</div><div class="body"><span class="node" style="border-color:var(--amber)"></span><div class="org">BITS Pilani · India</div><div class="pos">B.E. (Hons.) Electronics & Instrumentation · M.Sc. (Hons.) Mathematics</div><div class="note">The analytical bedrock under the design.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- RESEARCH -->
+<section class="research" id="research">
+  <div class="wrap">
+    <div class="eyebrow reveal" style="margin-bottom:16px;color:#a9a7a0">Published research</div>
+    <h2 class="reveal">Studying how people meet AI</h2>
+    <p class="sub reveal">My academic work focuses on human–AI interaction — how people form mental models of AI agents, the psychological dynamics of conversational AI, and how communities form online. Selected recent papers:</p>
+    <div class="rgrid">
+      <div>
+        <div class="pub reveal"><div class="venue">DIS 2025 · Madeira, Portugal</div><div class="ttl"><a href="https://doi.org/10.1145/3715336.3735823" target="_blank" rel="noopener">Designing with Multi-Agent Generative AI: Insights from Industry Early Adopters</a></div></div>
+        <div class="pub reveal"><div class="venue">CHI EA 2025 · Yokohama</div><div class="ttl"><a href="https://doi.org/10.1145/3706599.3706693" target="_blank" rel="noopener">Exploring Early Adopters' Use of AI-Driven Multi-Agent Systems to Inform Human–Agent Interaction Design</a></div></div>
+        <div class="pub reveal"><div class="venue">FAccT 2025 · Athens, Greece</div><div class="ttl"><a href="https://doi.org/10.48550/arXiv.2412.07951" target="_blank" rel="noopener">From Lived Experience to Insight: Unpacking the Psychological Risks of Using AI Conversational Agents</a></div></div>
+        <div class="pub reveal"><div class="venue">CSCW Companion 2024 · Costa Rica</div><div class="ttl"><a href="https://doi.org/10.1145/3678884.3687139" target="_blank" rel="noopener">Future Dialogues: Personal AI Assistants and Their Interactions with Us and Each Other</a></div></div>
+        <div class="pub reveal"><div class="venue">Creativity & Cognition 2024 · Chicago</div><div class="ttl"><a href="https://doi.org/10.1145/3635636.3664257" target="_blank" rel="noopener">From Digital Practices to Bond Formation: BTS Online Fandom Communities</a></div></div>
+      </div>
+      <div class="rside reveal">
+        <h4>Research focus</h4>
+        <p class="big">How do people build trust, mental models, and relationships with AI systems — and each other — on socio-technical platforms?</p>
+        <div class="venues">
+          <span>CHI</span><span>DIS</span><span>CSCW</span><span>FAccT</span><span>C&amp;C</span><span>EduCHI</span><span>EuroVis</span><span>IndiaHCI</span><span>INTERACT</span>
+        </div>
+        <a class="morebtn" href="https://scholar.google.com/citations?user=JXyuvtwAAAAJ" target="_blank" rel="noopener">Full publication list →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- METHODS -->
+<section class="methods">
+  <div class="wrap">
+    <div class="eyebrow reveal" style="margin-bottom:16px">How I work</div>
+    <h2 class="reveal">From messy human truth to clear decisions</h2>
+    <div class="mgrid">
+      <div class="m reveal"><div class="ic" style="background:var(--blue)">01</div><h4>Get close to people</h4><p>In-depth & cross-market interviews, diary studies, contextual and field research, usability — qualitative methods that surface what surveys miss.</p><div class="tools">Interviews · Diary studies · Field work · Surveys</div></div>
+      <div class="m reveal"><div class="ic" style="background:var(--teal)">02</div><h4>Make sense of the data</h4><p>Mixed-methods synthesis, mental-model mapping, and a researcher's eye for the pattern that actually changes the roadmap.</p><div class="tools">Mixed methods · Grounded coding · Thematic analysis · Statistical analysis · Synthesis frameworks</div></div>
+      <div class="m reveal"><div class="ic" style="background:var(--coral)">03</div><h4>Make it impossible to ignore</h4><p>A designer's craft on top of research rigor: data visualization and storytelling that turn findings into decisions teams remember and act on.</p><div class="tools">Data viz · Narrative · Strategy translation</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="wrap">
+    <div class="eyebrow reveal" style="margin-bottom:20px;color:#b9b7b0;justify-content:center">Let's talk</div>
+    <h2 class="reveal">The shortest distance between truth<br>and a person is a <span class="accent">story.</span></h2>
+    <p class="reveal">Researching AI products, building a UX research practice, or just want to talk data and humans? I'd love to hear from you.</p>
+    <div class="clinks reveal">
+      <a class="primary" href="mailto:naik.suchismita@gmail.com">Email me</a>
+      <a href="https://www.linkedin.com/in/suchismitanaik/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://www.suchismitanaik.com/" target="_blank" rel="noopener">Full portfolio</a>
+      <a href="https://www.behance.net/Suchismitanaik" target="_blank" rel="noopener">Behance</a>
+      <a href="https://vimeo.com/suchismitanaik" target="_blank" rel="noopener">Vimeo</a>
+    </div>
+  </div>
+</section>
+<footer>Designed as a living portfolio · Suchismita Naik · <a href="https://www.suchismitanaik.com/" target="_blank" rel="noopener">suchismitanaik.com</a></footer>
+
+<script>
+/* graceful image fallback: if a portfolio image can't load, show a tasteful gradient instead of a broken icon */
+const GRAD=['linear-gradient(135deg,#2b50e0,#7a52c9)','linear-gradient(135deg,#1f9c8a,#2b50e0)','linear-gradient(135deg,#e8634a,#f0a23b)','linear-gradient(135deg,#f0a23b,#1f9c8a)','linear-gradient(135deg,#7a52c9,#e8634a)'];
+document.querySelectorAll('.ph img').forEach((im,i)=>{im.addEventListener('error',()=>{const ph=im.parentElement;ph.style.background=GRAD[i%GRAD.length];im.remove();});});
+
+/* scroll progress */
+const prog=document.getElementById('progress');
+addEventListener('scroll',()=>{const h=document.documentElement;const sc=h.scrollTop/(h.scrollHeight-h.clientHeight);prog.style.width=(sc*100)+'%';},{passive:true});
+
+/* reveal on scroll */
+const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}})},{threshold:.16});
+document.querySelectorAll('.reveal').forEach((el,i)=>{el.style.transitionDelay=(Math.min(i%6,4)*60)+'ms';io.observe(el);});
+
+/* count up */
+const cio=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){const n=e.target;const to=+n.dataset.to;const span=n.querySelector('span');let v=0;const step=Math.max(1,Math.round(to/40));const t=setInterval(()=>{v+=step;if(v>=to){v=to;clearInterval(t);}span.textContent=v;},22);cio.unobserve(n);}})},{threshold:.5});
+document.querySelectorAll('.num[data-to]').forEach(n=>cio.observe(n));
+
+/* hero data-viz canvas: animated scatter that connects into a trend line */
+const cv=document.getElementById('plot');const ctx=cv.getContext('2d');let W,H,pts=[];
+const COL=['#2b50e0','#1f9c8a','#f0a23b','#e8634a','#7a52c9'];
+function size(){W=cv.width=cv.offsetWidth*devicePixelRatio;H=cv.height=cv.offsetHeight*devicePixelRatio;init();}
+function init(){pts=[];const n=Math.round(W/55);for(let i=0;i<n;i++){pts.push({x:Math.random()*W,y:Math.random()*H,r:(Math.random()*2.4+1.2)*devicePixelRatio,vx:(Math.random()-.5)*.18*devicePixelRatio,vy:(Math.random()-.5)*.18*devicePixelRatio,c:COL[i%COL.length]});}}
+function draw(){ctx.clearRect(0,0,W,H);for(let i=0;i<pts.length;i++){const p=pts[i];p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;for(let j=i+1;j<pts.length;j++){const q=pts[j];const dx=p.x-q.x,dy=p.y-q.y;const d=Math.hypot(dx,dy);if(d<140*devicePixelRatio){ctx.globalAlpha=(1-d/(140*devicePixelRatio))*.28;ctx.strokeStyle=p.c;ctx.lineWidth=devicePixelRatio;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.stroke();}}}ctx.globalAlpha=1;for(const p of pts){ctx.fillStyle=p.c;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,7);ctx.fill();}requestAnimationFrame(draw);}
+addEventListener('resize',size);size();draw();
+</script>
+</body>
+</html>
