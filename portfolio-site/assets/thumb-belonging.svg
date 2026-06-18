@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 270" width="480" height="270" role="img" aria-label="Multi-agent design patterns for belonging">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7b6ef0"/><stop offset="1" stop-color="#2fa993"/>
+    </linearGradient>
+  </defs>
+  <rect width="480" height="270" fill="url(#bg)"/>
+  <g stroke="#ffffff" stroke-opacity="0.07" stroke-width="1"><path d="M0 67H480M0 135H480M0 202H480"/></g>
+  <!-- links from agents to community -->
+  <g stroke="#ffffff" stroke-opacity="0.45" stroke-width="1.6">
+    <line x1="92" y1="74" x2="210" y2="120"/><line x1="392" y1="74" x2="270" y2="120"/>
+    <line x1="92" y1="198" x2="210" y2="150"/><line x1="392" y1="198" x2="270" y2="150"/>
+  </g>
+  <!-- community cluster (people) -->
+  <g fill="#ffffff">
+    <circle cx="240" cy="108" r="9"/><circle cx="212" cy="132" r="9"/><circle cx="268" cy="132" r="9"/>
+    <circle cx="226" cy="160" r="9"/><circle cx="254" cy="160" r="9"/><circle cx="240" cy="135" r="11" fill-opacity="0.85"/>
+  </g>
+  <circle cx="240" cy="135" r="58" fill="none" stroke="#ffffff" stroke-opacity="0.3"/>
+  <!-- agent hexagons -->
+  <g stroke="#ffffff" stroke-width="2">
+    <polygon points="-14,0 -7,12 7,12 14,0 7,-12 -7,-12" transform="translate(92,74)" fill="#3ba55d"/>
+    <polygon points="-14,0 -7,12 7,12 14,0 7,-12 -7,-12" transform="translate(392,74)" fill="#e0875f"/>
+    <polygon points="-14,0 -7,12 7,12 14,0 7,-12 -7,-12" transform="translate(92,198)" fill="#6a5cf0"/>
+    <polygon points="-14,0 -7,12 7,12 14,0 7,-12 -7,-12" transform="translate(392,198)" fill="#e84c4c"/>
+  </g>
+  <g font-family="Inter, Arial, sans-serif" font-weight="800">
+    <rect x="28" y="26" width="150" height="24" rx="12" fill="#ffffff" fill-opacity="0.16"/>
+    <text x="103" y="42" text-anchor="middle" font-size="12" fill="#ffffff">9 PATTERNS · 4 AGENTS</text>
+  </g>
+  <text x="28" y="250" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="700" letter-spacing="2" fill="#ffffff" fill-opacity="0.9">BELONGING + MULTI-AGENT AI</text>
+</svg>
