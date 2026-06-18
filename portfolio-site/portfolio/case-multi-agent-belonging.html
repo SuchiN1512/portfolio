@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Multi-Agent Design Patterns for Belonging — Case Study · Suchismita Naik</title>
+<style>
+  :root{
+    --bg:#fbf8f3; --bg-soft:#f1eefb; --card:#ffffff; --line:#eae4dc;
+    --ink:#2d2b35; --ink-soft:#5d626e; --ink-dim:#9aa0aa;
+    --accent:#7b6ef0; --accent-2:#2fa993; --accent-warm:#e0875f;
+    --lav:#ded7ff; --blue:#cfe6ff; --mint:#d4f0e3; --butter:#fbecb8; --peach:#ffded0;
+    --radius:16px; --max:1080px;
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.6;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 24px;}
+  .narrow{max-width:760px;margin:0 auto;padding:0 24px;}
+  h1,h2,h3,h4{line-height:1.18;margin:0;font-weight:680;letter-spacing:-0.02em;}
+  p{margin:0 0 1em;}
+  a{color:var(--accent);text-decoration:none;}
+  .muted{color:var(--ink-soft);} .dim{color:var(--ink-dim);}
+
+  nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);background:rgba(251,248,243,0.8);border-bottom:1px solid var(--line);}
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;height:58px;}
+  .logo{font-weight:760;letter-spacing:-0.03em;font-size:17px;}
+  .logo b{color:var(--accent);}
+  .navlinks{display:flex;gap:20px;font-size:14px;}
+  .navlinks a{color:var(--ink-soft);} .navlinks a:hover{color:var(--ink);}
+  @media(max-width:720px){.navlinks{display:none;}}
+  .back{font-size:13px;color:var(--ink-soft);}
+
+  header.hero{padding:64px 0 48px;border-bottom:1px solid var(--line);background:
+     radial-gradient(900px 400px at 12% -10%, rgba(190,176,255,0.55), transparent 62%),
+     radial-gradient(760px 380px at 92% -5%, rgba(174,214,255,0.5), transparent 58%),
+     radial-gradient(680px 420px at 60% 120%, rgba(196,238,219,0.4), transparent 60%);}
+  .kicker{font-size:13px;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:18px;}
+  .hero h1{font-size:clamp(30px,5vw,50px);max-width:18ch;}
+  .hero .lede{font-size:clamp(17px,2.1vw,20px);color:var(--ink-soft);max-width:62ch;margin-top:22px;}
+  .metarow{display:flex;flex-wrap:wrap;gap:28px;margin-top:30px;}
+  .metarow .m .l{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-dim);}
+  .metarow .m .v{font-size:15px;font-weight:580;margin-top:3px;}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:40px;}
+  .stat{background:rgba(255,255,255,.6);border:1px solid var(--line);border-radius:14px;padding:16px;}
+  .stat .n{font-size:24px;font-weight:720;letter-spacing:-0.03em;}
+  .stat .l{font-size:12.5px;color:var(--ink-dim);margin-top:3px;}
+  @media(max-width:720px){.stats{grid-template-columns:repeat(2,1fr);}}
+
+  section{padding:60px 0;border-bottom:1px solid var(--line);}
+  .sec-kicker{font-size:13px;letter-spacing:0.13em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;}
+  h2.sec{font-size:clamp(24px,3.4vw,34px);max-width:22ch;margin-bottom:18px;}
+  section p{max-width:70ch;color:var(--ink-soft);}
+  section p strong{color:var(--ink);font-weight:620;}
+  #problem{background:linear-gradient(180deg, rgba(255,222,208,.4), transparent 70%);}
+  #scope{background:linear-gradient(180deg, rgba(207,230,255,.4), transparent 70%);}
+  #process{background:linear-gradient(180deg, rgba(212,240,227,.45), transparent 70%);}
+  #patterns{background:linear-gradient(180deg, rgba(222,215,255,.42), transparent 70%);}
+  #proto{background:linear-gradient(180deg, rgba(251,236,184,.34), transparent 60%);}
+
+  /* process steps */
+  .flow{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:24px;}
+  @media(max-width:760px){.flow{grid-template-columns:1fr;}}
+  .step{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px;}
+  .step .num{font-size:12px;font-weight:700;color:var(--accent);letter-spacing:.08em;}
+  .step h3{font-size:17px;margin:8px 0 8px;}
+  .step p{font-size:14px;margin:0;max-width:none;}
+  .step .tags{margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;}
+  .tag{font-size:11px;padding:3px 9px;border-radius:999px;background:var(--bg-soft);border:1px solid var(--line);color:var(--ink-soft);}
+  .arrowrow{text-align:center;color:var(--accent-2);font-size:13px;margin-top:18px;letter-spacing:.05em;}
+
+  /* RQ list */
+  .rqs{display:grid;grid-template-columns:1fr;gap:12px;margin-top:20px;}
+  .rq{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px;}
+  .rq b{display:block;font-size:13px;color:var(--accent);margin-bottom:4px;letter-spacing:.03em;}
+  .rq span{font-size:15px;color:var(--ink-soft);}
+
+  /* pattern cards */
+  .pgrid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:24px;}
+  @media(max-width:760px){.pgrid{grid-template-columns:1fr;}}
+  .pcard{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:24px;}
+  .pcard .pt{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-dim);}
+  .pcard h3{font-size:19px;margin:6px 0 10px;}
+  .pcard h3 .dot{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:8px;vertical-align:middle;}
+  .pcard p{font-size:14px;margin:0 0 12px;max-width:none;}
+  .pcard .lab{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-dim);margin-top:10px;}
+  .pcard .subs{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;}
+  .pcard .subs span{font-size:11.5px;padding:3px 9px;border-radius:999px;background:var(--bg-soft);border:1px solid var(--line);color:var(--ink-soft);}
+  .pcard .risk{font-size:13px;color:var(--ink-soft);margin-top:10px;}
+
+  /* ===== DISCORD-STYLE PROTOTYPE ===== */
+  .proto-wrap{margin-top:26px;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 24px 60px -30px rgba(45,43,53,.5);}
+  .proto-tabs{display:flex;flex-wrap:wrap;gap:8px;background:#f6f3fb;padding:14px;border-bottom:1px solid var(--line);}
+  .ptab{font-size:13px;font-weight:560;padding:9px 14px;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--ink-soft);cursor:pointer;transition:.15s;display:flex;align-items:center;gap:8px;}
+  .ptab .swatch{width:9px;height:9px;border-radius:3px;}
+  .ptab:hover{border-color:var(--accent);}
+  .ptab.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+
+  .discord{display:grid;grid-template-columns:72px 220px 1fr;height:560px;background:#313338;color:#dbdee1;font-size:14px;}
+  @media(max-width:760px){.discord{grid-template-columns:0 0 1fr;height:600px;} .dc-rail,.dc-side{display:none !important;}}
+  .dc-rail{background:#1e1f22;display:flex;flex-direction:column;align-items:center;padding:12px 0;gap:10px;}
+  .dc-server{width:46px;height:46px;border-radius:16px;background:#5865f2;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;}
+  .dc-server.alt{background:#3a3c42;border-radius:50%;font-size:18px;}
+  .dc-side{background:#2b2d31;padding:14px 10px;display:flex;flex-direction:column;}
+  .dc-side .srv{font-weight:700;color:#f2f3f5;font-size:15px;padding:6px 8px 14px;border-bottom:1px solid #1f2023;}
+  .dc-cat{font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:#949ba4;margin:16px 8px 6px;font-weight:700;}
+  .dc-ch{padding:6px 8px;border-radius:6px;color:#949ba4;cursor:default;display:flex;align-items:center;gap:6px;font-size:14.5px;}
+  .dc-ch.active{background:#404249;color:#fff;}
+  .dc-ch .h{opacity:.6;}
+
+  .dc-main{display:flex;flex-direction:column;min-width:0;}
+  .dc-head{height:50px;border-bottom:1px solid #1f2023;display:flex;align-items:center;gap:8px;padding:0 16px;flex-shrink:0;background:#313338;}
+  .dc-head .t{font-weight:700;color:#f2f3f5;}
+  .dc-head .sub{color:#949ba4;font-size:12.5px;border-left:1px solid #3f4147;padding-left:10px;margin-left:4px;}
+  .dc-log{flex:1;overflow-y:auto;padding:16px 16px 8px;}
+  .dc-scenetitle{color:#949ba4;font-size:12.5px;text-align:center;margin:6px 0 14px;}
+
+  .msg{display:flex;gap:12px;padding:8px 6px;border-radius:8px;margin-bottom:2px;animation:fade .35s ease;}
+  .msg:hover{background:#2e3035;}
+  @keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+  .av{width:38px;height:38px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:15px;}
+  .msg .body{min-width:0;}
+  .msg .name{font-weight:600;color:#f2f3f5;font-size:14.5px;}
+  .msg .name .time{color:#949ba4;font-weight:400;font-size:11.5px;margin-left:8px;}
+  .msg .name .botbadge{background:#5865f2;color:#fff;font-size:10px;font-weight:700;border-radius:4px;padding:1px 5px;margin-left:8px;letter-spacing:.03em;vertical-align:middle;}
+  .msg .text{color:#dbdee1;margin-top:2px;}
+  .msg .text em{color:#b6bac0;}
+
+  /* agent card */
+  .agentcard{border:1px solid #3f4147;border-left:3px solid var(--ac, #3ba55d);border-radius:10px;background:#2b2d31;padding:12px 14px;margin-top:6px;max-width:560px;}
+  .agentcard .role{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ac,#3ba55d);font-weight:700;margin-bottom:6px;}
+  .agentcard .ctext{color:#dbdee1;}
+  .agentcard .opts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+  .agentcard .opt{font-size:13px;background:#404249;border:1px solid #4a4c52;color:#f2f3f5;border-radius:7px;padding:7px 11px;cursor:default;}
+  .agentcard .opt.primary{background:#5865f2;border-color:#5865f2;}
+  .agentcard .note{font-size:11.5px;color:#949ba4;margin-top:10px;border-top:1px dashed #3f4147;padding-top:8px;display:flex;gap:6px;}
+  .agentcard .note b{color:#b6bac0;font-weight:600;}
+  .attach{margin-top:8px;border:1px solid #3f4147;border-radius:8px;overflow:hidden;max-width:420px;}
+  .attach .imgph{height:120px;background:linear-gradient(135deg,#4b3f6e,#3a5a6e);display:flex;align-items:center;justify-content:center;color:#cfd3da;font-size:13px;}
+  .attach .cap{padding:8px 10px;font-size:13px;color:#b6bac0;}
+  .evidence{margin-top:8px;background:#202225;border:1px solid #3f4147;border-radius:8px;padding:10px 12px;font-size:13px;}
+  .evidence .row{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #2b2d31;}
+  .evidence .row:last-child{border:0;}
+  .evidence .k{color:#949ba4;} .evidence .v{color:#f2f3f5;font-weight:600;}
+  .biaschk{margin-top:8px;background:rgba(240,135,95,.12);border:1px solid rgba(240,135,95,.4);border-radius:8px;padding:9px 12px;font-size:12.5px;color:#f0c2a8;}
+
+  .dc-ctrl{flex-shrink:0;border-top:1px solid #1f2023;background:#313338;padding:12px 16px;display:flex;align-items:center;gap:10px;}
+  .dc-ctrl .prog{flex:1;font-size:12.5px;color:#949ba4;}
+  .dcbtn{font-size:13.5px;font-weight:600;border-radius:8px;padding:9px 16px;border:1px solid #4a4c52;background:#404249;color:#f2f3f5;cursor:pointer;}
+  .dcbtn.primary{background:#5865f2;border-color:#5865f2;}
+  .dcbtn:disabled{opacity:.45;cursor:not-allowed;}
+  .dcbtn:hover:not(:disabled){filter:brightness(1.08);}
+
+  .caption{font-size:13px;color:var(--ink-dim);margin-top:14px;text-align:center;}
+  .howto{margin-top:30px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px;}
+  .howto > p{max-width:72ch;color:var(--ink-soft);}
+  .howto .pr{border-top:1px solid var(--line);padding-top:16px;margin-top:16px;}
+  .howto .pr.first{border-top:0;padding-top:4px;margin-top:14px;}
+  .howto h4{font-size:16px;margin:0 0 8px;color:var(--ink);}
+  .howto h4 .num{color:var(--accent);font-weight:800;margin-right:8px;}
+  .howto ul{margin:0;padding-left:18px;}
+  .howto li{font-size:14px;color:var(--ink-soft);margin-bottom:8px;line-height:1.5;}
+  .howto li b{color:var(--ink);}
+  .sub{font-size:18px;margin:36px 0 14px;color:var(--ink);}
+  .refl h4 .tag{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-dim);border:1px solid var(--line);border-radius:999px;padding:2px 8px;margin-left:8px;vertical-align:middle;font-weight:700;}
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+  @media(max-width:760px){.steps{grid-template-columns:1fr;}}
+  .steps .step{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;}
+  .steps .step .sn{font-size:12px;font-weight:800;color:var(--accent);}
+  .steps .step b{display:block;font-size:14.5px;margin:4px 0 6px;color:var(--ink);}
+  .steps .step p{font-size:13px;color:var(--ink-soft);margin:0;max-width:none;line-height:1.45;}
+
+  /* outcome / pubs */
+  .pubs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px;}
+  @media(max-width:760px){.pubs{grid-template-columns:1fr;}}
+  .pub{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-size:14px;}
+  .pub .venue{font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--accent-2);font-weight:700;}
+  .pub a{font-weight:560;}
+  .callout{background:#fff7e6;border:1px solid #f1e3bf;border-left:3px solid var(--accent-warm);border-radius:12px;padding:16px 18px;margin-top:22px;font-size:14.5px;color:#6b5f44;max-width:none;}
+  /* wide breakout for the embedded journey map */
+  .embed-wide{width:92vw;max-width:1080px;position:relative;left:50%;transform:translateX(-50%);margin:26px 0 6px;}
+  .embed-frame{border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 24px 60px -30px rgba(45,43,53,.5);background:#fff;}
+  .embed-frame iframe{display:block;width:100%;height:640px;border:0;}
+  .embed-bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;padding:11px 16px;background:#f6f3fb;border-bottom:1px solid var(--line);font-size:13px;}
+  .embed-bar .ttl{font-weight:600;color:var(--ink);}
+  .embed-bar a{font-weight:560;}
+  @media(max-width:760px){.embed-frame iframe{height:560px;}}
+  .twocol{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:20px;}
+  @media(max-width:760px){.twocol{grid-template-columns:1fr;}}
+  .refl{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;}
+  .refl h4{font-size:14px;color:var(--accent);margin-bottom:8px;}
+  .refl p{font-size:14px;margin:0;max-width:none;}
+  footer{padding:30px 0;color:var(--ink-dim);font-size:13px;text-align:center;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="logo" href="../index.html">SUCHI<b>.</b>NAIK</a>
+    <div class="navlinks">
+      <a href="#problem">Problem</a><a href="#scope">Scope</a><a href="#process">Process</a>
+      <a href="#patterns">Patterns</a><a href="#proto">Prototypes</a><a href="#outcome">Outcome</a>
+    </div>
+    <a class="back" href="../index.html">← Back to portfolio</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker">Research-through-design · AI / Multi-agent systems · End-to-end</div>
+    <h1>Designing AI agents that strengthen belonging — instead of replacing it</h1>
+    <p class="lede">A four-year, research-through-design project that took a human question — <strong>how do strangers come to belong online?</strong> — through field research, AI-practitioner study, and synthesis, into a library of <strong>multi-agent design patterns</strong>, then prototyped those patterns as working community interfaces.</p>
+    <div class="metarow">
+      <div class="m"><div class="l">My role</div><div class="v">Lead designer &amp; researcher (solo)</div></div>
+      <div class="m"><div class="l">Method</div><div class="v">Research-through-design</div></div>
+      <div class="m"><div class="l">Timeline</div><div class="v">~4 years · PhD, Purdue</div></div>
+      <div class="m"><div class="l">Context</div><div class="v">Fandom communities + AI practitioners (Microsoft)</div></div>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="n">3 studies</div><div class="l">field → practitioner → synthesis</div></div>
+      <div class="stat"><div class="n">9 patterns</div><div class="l">4 primary agents specified in depth</div></div>
+      <div class="stat"><div class="n">4 prototypes</div><div class="l">vibe-coded, interactive below</div></div>
+      <div class="stat"><div class="n">4 papers</div><div class="l">CHI · DIS · CSCW · C&amp;C</div></div>
+    </div>
+  </div>
+</header>
+
+<!-- PROBLEM -->
+<section id="problem">
+  <div class="narrow">
+    <div class="sec-kicker">The problem space</div>
+    <h2 class="sec">Belonging is human labor. What happens when AI enters the room?</h2>
+    <p>Online communities are where millions of people weather crises, form real relationships, and build a sense of belonging with people they may never meet. That belonging isn't automatic — it's <strong>produced by labor</strong>: members welcome newcomers, check in on each other, amplify each other's creative work, and protect the space from harm.</p>
+    <p>Generative AI is now entering these spaces. The dominant instinct is to <strong>automate</strong> — auto-answer the newcomer, auto-generate the art, auto-moderate the conflict. But every one of those acts is also a moment where belonging is <em>made</em>. Automate it away and you may deliver the information faster while quietly removing the human contact that produced connection in the first place.</p>
+    <p>The design challenge: <strong>how can advanced AI be designed to support — rather than displace — the human practices through which belonging is produced?</strong> Not "should AI be here," but "what role should it play, and where would that role do more good than harm?"</p>
+  </div>
+</section>
+
+<!-- SCOPE -->
+<section id="scope">
+  <div class="narrow">
+    <div class="sec-kicker">Scoping the problem</div>
+    <h2 class="sec">From an unbounded question to three answerable studies</h2>
+    <p>"How should AI support belonging" is too big to design against directly. I scoped it into three sequential studies, each answering a question the next one needed — moving from <strong>human dynamics</strong>, to <strong>AI-system reality</strong>, to a <strong>synthesis</strong> that bridges the two.</p>
+    <div class="rqs">
+      <div class="rq"><b>Study 1 · Understand the human mechanism</b><span>How does supportive communication actually create belonging in a thriving online community? (Diary study + interviews with the BTS/ARMY fandom.)</span></div>
+      <div class="rq"><b>Study 2 · Understand the design material</b><span>How do practitioners who build multi-agent generative AI systems conceptualize, structure, and constrain them? (Interviews with AI practitioners at Microsoft.)</span></div>
+      <div class="rq"><b>Study 3 · Synthesize into design moves</b><span>What AI agent roles do those human mechanisms imply — and under what conditions do they help rather than harm? (Research-through-design synthesis → the pattern library.)</span></div>
+    </div>
+    <div class="callout">Why this scoping matters as design: I deliberately refused to start at the interface. The patterns are grounded in <b>why</b> belonging forms before deciding <b>what</b> an agent should do — so each design move traces back to evidence, not assumption.</div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process">
+  <div class="wrap">
+    <div class="narrow" style="padding:0;">
+      <div class="sec-kicker">Research-through-design</div>
+      <h2 class="sec">How three studies became a design library</h2>
+      <p>Research-through-design treats the act of designing as a way of producing knowledge. Each study generated insight; the synthesis turned that insight into <strong>conceptual design moves</strong> — named agent roles with behaviors, instantiations, risks, and diagnostic questions a real team could apply.</p>
+    </div>
+    <div class="flow">
+      <div class="step">
+        <div class="num">STUDY 1</div>
+        <h3>Get close to the human truth</h3>
+        <p>Diary study + semi-structured interviews with BTS/ARMY members surfaced the real mechanisms of belonging: onboarding vulnerability, the social cost of disclosing struggle, under-recognized creative labor, and threats to community integrity.</p>
+        <div class="tags"><span class="tag">Diary study</span><span class="tag">Interviews</span><span class="tag">Thematic analysis</span></div>
+      </div>
+      <div class="step">
+        <div class="num">STUDY 2</div>
+        <h3>Understand the AI material</h3>
+        <p>Interviews with AI practitioners building multi-agent systems revealed how they think (org metaphors, "team of experts," "divide &amp; conquer"), two collaboration paradigms (AI-dominant vs AI-assisted), and cross-cutting risks: hallucination, error propagation, the black-box problem.</p>
+        <div class="tags"><span class="tag">Practitioner interviews</span><span class="tag">Multi-agent systems</span><span class="tag">Trust &amp; transparency</span></div>
+      </div>
+      <div class="step">
+        <div class="num">STUDY 3</div>
+        <h3>Synthesize into patterns</h3>
+        <p>For each human insight I asked: <em>what agent role does this imply?</em> Role concepts were clustered by the community challenge they addressed, producing nine patterns in four themes — four specified in full depth, each with behaviors, risks, and fit questions.</p>
+        <div class="tags"><span class="tag">RtD synthesis</span><span class="tag">Pattern language</span><span class="tag">Vignettes</span></div>
+      </div>
+    </div>
+    <div class="arrowrow">human mechanism → AI design material → transferable, evidence-grounded patterns</div>
+  </div>
+</section>
+
+<!-- PATTERNS -->
+<section id="patterns">
+  <div class="wrap">
+    <div class="narrow" style="padding:0;">
+      <div class="sec-kicker">The outcome of the research</div>
+      <h2 class="sec">Four primary agent patterns</h2>
+      <p>Each pattern names a role an AI agent might play, the belonging challenge it addresses, the coordinated sub-agents that carry it out, and — critically — the <strong>risks and diagnostic questions</strong> that decide whether it belongs in a given community. A guiding constraint runs through all four: <strong>amplify and protect human connection; never substitute for it.</strong></p>
+    </div>
+    <div class="pgrid">
+      <div class="pcard">
+        <div class="pt">Theme 1 · Lowering barriers to participation</div>
+        <h3><span class="dot" style="background:#3ba55d"></span>Newcomer Bridge Agent</h3>
+        <p>Newcomers need to learn norms and find the right people, but asking basic questions exposes their outsider status. The agent privately learns their goals and bridges them to the <em>people</em> who can welcome them — it never befriends them itself.</p>
+        <div class="lab">Sub-agents</div>
+        <div class="subs"><span>User Proxy</span><span>Knowledge Curator</span><span>Guide Writer</span><span>Contribution Coach</span></div>
+        <div class="risk"><b>Key risk:</b> pre-empting the welcome question can remove the moment of human contact that produces belonging.</div>
+      </div>
+      <div class="pcard">
+        <div class="pt">Theme 2 · Emotional &amp; social support</div>
+        <h3><span class="dot" style="background:#7b6ef0"></span>Support Companion Agent</h3>
+        <p>Members carry real emotional weight but hesitate to disclose publicly. The agent offers low-pressure, dignity-preserving check-ins with a consent-based escalation model — never therapy, never imposed, always exitable.</p>
+        <div class="lab">Core moves</div>
+        <div class="subs"><span>Gentle check-in</span><span>"No response needed"</span><span>Resource routing</span><span>Consent escalation</span></div>
+        <div class="risk"><b>Key risk:</b> subtle care can feel like surveillance; false positives erode trust fast.</div>
+      </div>
+      <div class="pcard">
+        <div class="pt">Theme 3 · Expression &amp; collective sense-making</div>
+        <h3><span class="dot" style="background:#e0875f"></span>Creative Signal Booster Agent</h3>
+        <p>Creative work builds belonging but gets drowned out. The agent helps members share and be seen — captions, translation, accessibility, amplification — while <em>boosting signal, not generating content</em> (calibrated to each community's authorship norms).</p>
+        <div class="lab">Core moves</div>
+        <div class="subs"><span>Caption / translate</span><span>Alt-text by default</span><span>Targeted amplification</span><span>Supportive feedback</span></div>
+        <div class="risk"><b>Key risk:</b> can homogenize style and reinforce popularity hierarchies.</div>
+      </div>
+      <div class="pcard">
+        <div class="pt">Theme 4 · Protecting community integrity</div>
+        <h3><span class="dot" style="background:#e84c4c"></span>Boundary &amp; Integrity Agent</h3>
+        <p>Belonging needs protection from harm. The agent does quiet boundary work — detecting scams and coordinated harassment, then handing <em>evidence and recommendations</em> to human moderators with a built-in bias check. It supports moderators; it never enforces autonomously.</p>
+        <div class="lab">Sub-agents</div>
+        <div class="subs"><span>Detector</span><span>Threat Intelligence</span><span>Bias Check</span><span>Explainer / Writer</span></div>
+        <div class="risk"><b>Key risk:</b> false positives disproportionately hit non-native speakers; surveillance chills participation.</div>
+      </div>
+    </div>
+
+    <div class="narrow" style="padding:0;">
+      <h3 style="font-size:20px;margin:40px 0 8px;">Mapping all nine patterns to the member journey</h3>
+      <p>These four are only part of the picture. This interactive journey map shows how all <strong>nine agent patterns</strong> — including cross-cutting ones like the Boundary &amp; Integrity Agent and the Identity Mask &amp; Credit Keeper — align to each stage of a member's journey, from newcomer to experienced member. Click through the stages to see which agents are active when.</p>
+    </div>
+
+    <div class="embed-wide">
+      <div class="embed-frame">
+        <div class="embed-bar">
+          <span class="ttl">Member Journey — AI Agent Design Patterns for Community Belonging</span>
+          <a href="https://suchin1512.github.io/CUJ-map/" target="_blank" rel="noopener">Open full screen ↗</a>
+        </div>
+        <iframe src="https://suchin1512.github.io/CUJ-map/" title="Interactive member journey map of the nine agent design patterns" loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROTOTYPES -->
+<section id="proto">
+  <div class="wrap">
+    <div class="narrow" style="padding:0;">
+      <div class="sec-kicker">The patterns, vibe-coded as designs</div>
+      <h2 class="sec">See each agent in the room</h2>
+      <p>To pressure-test the patterns as <strong>design</strong>, not just theory, I vibe-coded each one into a working, deployed app — a realistic community interface that walks through the exact vignette from the research. Open it below, pick an agent, and step through the scenario to watch how the agent works <em>at the margins</em> — private, consent-first, human-in-the-loop.</p>
+      <div class="callout" style="background:#eef0ff;border-color:#d3d7ff;border-left-color:var(--accent);color:#3d3a6b;">
+        <b>Designed with AI (vibe-coded).</b> I built this as a <i>live, deployed app</i> by describing the vignettes to AI coding tools and iterating in natural language — turning a 160-page dissertation into a working product prototype. The workflow itself is the artifact: it shows designing <i>with</i> AI, not just <i>about</i> it.
+      </div>
+    </div>
+
+    <div class="embed-wide">
+      <div class="embed-frame">
+        <div class="embed-bar">
+          <span class="ttl">Multi-Agent Design Patterns — live, vibe-coded app</span>
+          <a href="https://multi-agent-design-patterns-913747076822.us-west2.run.app/" target="_blank" rel="noopener">Open the live app ↗</a>
+        </div>
+        <iframe src="https://multi-agent-design-patterns-913747076822.us-west2.run.app/" title="Live vibe-coded app: multi-agent design patterns for community belonging" loading="lazy"></iframe>
+      </div>
+    </div>
+    <div class="caption">Live app, deployed on Google Cloud Run. Scenarios are fictionalized composites — the underlying dynamics are drawn directly from the dissertation's research data and vignettes. If the embed doesn't load, use “Open the live app ↗”.</div>
+
+    <div class="narrow" style="padding:0;">
+      <div class="howto">
+        <div class="sec-kicker">How design principles are woven in</div>
+        <p>Every foundational principle from the research is woven directly into the interactive mechanics and visual cards of the live design. Here is exactly how and where each one shows up in the interface:</p>
+
+        <div class="pr first">
+          <h4><span class="num">01</span>Agents act privately &amp; consent-first</h4>
+          <ul>
+            <li><b>Support Companion — Mina's silence check-in:</b> when Mina goes quiet for ~10 days, the agent reaches out <b>privately in DMs</b> rather than calling her out publicly, offering a low-pressure "🌿 I'm okay, thanks / Just browsing" option — she is never forced into a social interaction or penalized for resting.</li>
+            <li><b>Newcomer Bridge — Jane:</b> Jane can choose to cross the warm bridge or decline quietly. The agent initiates support one-to-one, so the user keeps complete control of their visibility.</li>
+          </ul>
+        </div>
+
+        <div class="pr">
+          <h4><span class="num">02</span>Agents amplify &amp; route — never replace humans</h4>
+          <ul>
+            <li><b>Creative Signal Booster — Mina's art booster:</b> the agent strictly avoids "AI-slop" content generation — it does not write about or critique her artwork. Instead it gives <b>structural leverage</b>: auto-generated accessibility ALT-text so visually-impaired fans can enjoy her style, and routing the post to the dedicated <b>#lyric-analysis-deep-dive</b> community so the signal reaches interested human minds. Mina remains the sole owner, creator, and voice.</li>
+          </ul>
+        </div>
+
+        <div class="pr">
+          <h4><span class="num">03</span>Human-in-the-loop moderation — evidence brief &amp; bias check</h4>
+          <ul>
+            <li><b>Boundary &amp; Integrity — moderation co-pilot:</b> the agent is strictly prohibited from instant, autonomous bans. It serves as a co-pilot to human moderator <b>@RM_Lead_Mod</b>, compiling a <b>structured evidence brief</b> that matches timestamps, patterns, and severity.</li>
+            <li><b>Style-bias safety warning:</b> a dedicated card flags that bilingual member <b>@JiminLove_KR</b> — though typing rapidly about ticket trades — is an authentic, non-native-speaking human. The agent explicitly prompts the moderator to exclude them from quarantine, preventing algorithmic bias against cultural and linguistic variation.</li>
+          </ul>
+        </div>
+
+        <div class="pr">
+          <h4><span class="num">04</span>Continuous, clear transparency notes</h4>
+          <ul>
+            <li>Every time an agent produces a layout or assistance card in a DM or channel, it carries an explicit, bottom-anchored <b>🔍 Transparency Note</b> clarifying exactly what data was analyzed (e.g., participation-frequency metadata only, join timestamps, image-contrast tags) and the architectural boundaries protecting user privacy.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OUTCOME -->
+<section id="outcome">
+  <div class="narrow">
+    <div class="sec-kicker">Outcome &amp; contribution</div>
+    <h2 class="sec">A blueprint teams can actually use</h2>
+    <p>The nine patterns consolidate into a transferable design blueprint and an operational <strong>meta-playbook</strong> for community designers, platform architects, and researchers — pairing empirically grounded theory with diagnostic questions that help a team decide <em>which</em> pattern fits, and where automation would do harm. The dissertation makes <strong>two theoretical moves and delivers two practical tools</strong>.</p>
+
+    <h3 class="sub">Two theoretical moves, two practical deliverables</h3>
+    <div class="twocol">
+      <div class="refl"><h4>Belonging-as-Labor <span class="tag">theory</span></h4><p>Re-frames belonging as a dynamic practice that demands creative, infrastructural, and emotional labor from members — so AI should <em>amplify</em> that labor, never automate it.</p></div>
+      <div class="refl"><h4>Social-Metaphor Tension <span class="tag">theory</span></h4><p>Names the gap between the human metaphors practitioners design AI with (team, assistant) and the social accountability — empathy, negotiation — that current AI can't actually fulfil.</p></div>
+      <div class="refl"><h4>Design Blueprint <span class="tag">deliverable</span></h4><p>A transferable set of <b>9 multi-agent patterns</b> across 4 themes, bridging real community needs with technical multi-agent architectures.</p></div>
+      <div class="refl"><h4>Operational Meta-Playbook <span class="tag">deliverable</span></h4><p>A six-step process for taking patterns from paper to production — diagnosing belonging breakdowns <em>before</em> prescribing any AI intervention.</p></div>
+    </div>
+
+    <h3 class="sub">The meta-playbook — 6 steps from paper to production</h3>
+    <div class="steps">
+      <div class="step"><span class="sn">01</span><b>Diagnose belonging</b><p>Diagnostic questions across five belonging dimensions map to the thematic groups — no prior taxonomy knowledge needed.</p></div>
+      <div class="step"><span class="sn">02</span><b>Select patterns</b><p>Compose patterns to fit (e.g. Newcomer Bridge + Boundary Agent); they're designed to be combined.</p></div>
+      <div class="step"><span class="sn">03</span><b>Instantiation strategy</b><p>Re-instantiate per community culture, scale, and risk tolerance — adapt, don't copy.</p></div>
+      <div class="step"><span class="sn">04</span><b>Agent configuration</b><p>Decide single-agent vs. multi-agent architecture for the specific community need.</p></div>
+      <div class="step"><span class="sn">05</span><b>Transparency &amp; consent</b><p>Pre-deployment protocol: opt-out options, pause features, visible human-escalation paths.</p></div>
+      <div class="step"><span class="sn">06</span><b>Evaluate care risks</b><p>Assess failure modes — over-automation, loss of implicit care, power imbalances.</p></div>
+    </div>
+
+    <h3 class="sub">Reflection</h3>
+    <div class="twocol">
+      <div class="refl">
+        <h4>What this case demonstrates</h4>
+        <p>Framing an ambiguous problem space, scoping it into answerable research, synthesizing evidence into a reusable design system of patterns, and translating abstract concepts into concrete, interactive UI — end to end, by one designer.</p>
+      </div>
+      <div class="refl">
+        <h4>What I'd do next</h4>
+        <p>Move from blueprint to evidence: deploy coordinated patterns in live communities, instrument belonging and trust signals, extend the pattern language beyond fandom (gaming, health, education), and study the longitudinal effects of AI-mediated belonging.</p>
+      </div>
+    </div>
+
+    <h3 class="sub">Published research</h3>
+    <div class="pubs">
+      <div class="pub"><div class="venue">DIS 2025</div><a href="https://doi.org/10.1145/3715336.3735823">Designing with Multi-Agent Generative AI: Insights from Industry Early Adopters</a></div>
+      <div class="pub"><div class="venue">CHI EA 2025</div><a href="https://doi.org/10.1145/3706599.3706693">Early Adopters' Use of AI-Driven Multi-Agent Systems</a></div>
+      <div class="pub"><div class="venue">C&amp;C 2024</div><a href="https://doi.org/10.1145/3635636.3664257">From Digital Practices to Bond Formation: BTS Online Fandom</a></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Case study · Multi-Agent Design Patterns for Fostering Belonging · Suchismita Naik · PhD, HCI (Purdue)
+</footer>
+
+<script>
+/* ============ SCENARIO DATA (from dissertation vignettes) ============ */
+const AC = ['#3ba55d','#7b6ef0','#e0875f','#e84c4c'];
+const scenes = [
+  { /* 0 — Newcomer Bridge */
+    accent:'#3ba55d',
+    cat:'Onboarding',
+    channels:[['welcome',true],['rules',false],['lyric-analysis',false],['concert-help',false],['DM · Bridge Agent',false]],
+    chTitle:'welcome', chSub:'Newcomer Bridge Agent · onboarding',
+    title:'Vignette 1 — “Finding her way in”',
+    steps:[
+      {t:'sys',text:'Jane (22, new to BTS, uses a wheelchair) joins her first ARMY Discord — dozens of channels, years of inside jokes, norms she doesn’t know yet.'},
+      {t:'msg',av:'#c98a5e',name:'Jane',time:'just now',text:'…hi everyone 👋 (typing, deleting, retyping — worried a basic question will mark her as an outsider)'},
+      {t:'agent',role:'User Proxy Agent',name:'Bridge Agent',text:'Welcome to the server! I can help you find your way around — privately, no pressure. What brought you here, and what are you most interested in?',note:'Why this is private: it lets you control when and how your identity becomes visible to the community.'},
+      {t:'msg',av:'#c98a5e',name:'Jane',time:'now',text:'I love the lyrics about resilience, I want to go to a concert, and I have accessibility needs — I use a wheelchair.'},
+      {t:'agent',role:'Knowledge Curator',name:'Bridge Agent',text:'Found the most relevant things for you: a pinned thread of venue wheelchair guidance from experienced ARMYs, the lyric-discussion channel, and two members who volunteered to mentor newcomers and shared their own accessibility experiences.',evidence:[['Canonical posts','3 matched'],['Volunteer mentors','2 identified'],['Source','community-curated + official']]},
+      {t:'agent',role:'Guide Writer',name:'Bridge Agent',text:'Here’s your personal starter pack →',attach:{label:'🎒 Jane’s Starter Pack',cap:'Channel map · accessibility thread · how fan-art credit works · ticket-exchange norms · intro to 2 mentors'}},
+      {t:'agent',role:'Contribution Coach',name:'Bridge Agent',text:'One low-stakes way in: the “which BTS song first resonated with you?” thread is welcoming to personal replies and matches your interest. I won’t write it for you — just pointing you to the right moment.',note:'The agent reduces friction; it does not perform the connection. The welcome stays human.'},
+      {t:'sys',text:'Two weeks later: Jane has posted in three threads, connected with a mentor who helped plan concert logistics, and is sharing her own accessibility tips. The agent removed barriers — the belonging was human.'}
+    ]
+  },
+  { /* 1 — Support Companion */
+    accent:'#7b6ef0',
+    cat:'Member spaces',
+    channels:[['lyric-analysis',true],['fan-art-gallery',false],['army-moms',false],['peer-support',false],['DM · Companion',false]],
+    chTitle:'lyric-analysis', chSub:'Support Companion Agent · emotional support',
+    title:'Vignette 2 — “Quiet Comfort” (part 1 of 2)',
+    steps:[
+      {t:'sys',text:'Mina (38, nurse, mother of two, 3-year member) faced a personal loss. She keeps a surface presence but stopped joining army-moms, stopped posting art, and her lyric replies went flat. She’s told no one.'},
+      {t:'agent',role:'Support Companion Agent',name:'Companion',text:'Hi Mina — I noticed you’ve been a bit quieter in the lyric channels lately. No need to share anything. I just wanted you to know the community is here if you need it. Would any of these help?',note:'Signal used: opt-in engagement-pattern change only — not message content. You consented to this when you joined.',
+        opts:[['A comfort & healing playlist',0],['Peer-support channel',0],['I’m okay, thanks ✓',1]]},
+      {t:'sys',text:'Mina taps the playlist — and nothing else. The agent does not push. Weeks pass.'},
+      {t:'msg',av:'#7b6ef0',name:'Mina',time:'weeks later',text:'(returns to the check-in and quietly opens the peer-support channel link — reads threads without posting)'},
+      {t:'agent',role:'Vulnerability-Safe Circle',name:'Companion',text:'You can just read here for as long as you like. Lurking is participating too. Post only if and when you want.',note:'Layered participation: support is offered, never imposed; you can exit without owing anyone an explanation.'},
+      {t:'msg',av:'#7b6ef0',name:'Mina',time:'days later',text:'Going through a loss. The music helps. Grateful for this space.'},
+      {t:'msg',av:'#46a36b',name:'army-moms',time:'now',text:'me too 🫂  ·  here for you  ·  whenever you’re ready, we’re here'},
+      {t:'sys',text:'A private, consent-first pathway brought Mina back at her own pace — without the social cost of public disclosure. Next: how the creative re-emergence gets amplified →'}
+    ]
+  },
+  { /* 2 — Creative Signal Booster */
+    accent:'#e0875f',
+    cat:'Member spaces',
+    channels:[['lyric-analysis',false],['fan-art-gallery',true],['army-moms',false],['peer-support',false],['DM · Booster',false]],
+    chTitle:'fan-art-gallery', chSub:'Creative Signal Booster Agent · expression',
+    title:'Vignette 2 — “Visible Art” (part 2 of 2)',
+    steps:[
+      {t:'sys',text:'As Mina re-engages, she channels her grief into digital art: a series inspired by “00:00 (Zero O’Clock)” — midnight as a threshold between grief and renewal. She posts the first piece with a short English caption.'},
+      {t:'msg',av:'#7b6ef0',name:'Mina',time:'now',text:'first one in a while 🌙',attach:{label:'🎨 00:00 — threshold',cap:'“the moment of midnight, between grief and renewal”'}},
+      {t:'agent',role:'Creative Signal Booster',name:'Booster',text:'Beautiful work. I won’t change your art or write for you — but I can help it travel. A few optional boosts:',
+        opts:[['Add bilingual caption (KO/ES)',0],['Suggest fitting hashtags',0],['Add alt-text (on by default)',1]]},
+      {t:'agent',role:'Creative Signal Booster',name:'Booster',text:'I’ve surfaced your piece to members who’ve engaged with “00:00”-themed work before — so it reaches people likely to resonate, instead of getting lost in the high-volume feed.',evidence:[['Boost type','amplify, not generate'],['Audience','prior 00:00 engagers'],['Authorship','100% human — yours']],note:'Constraint from the research: in fandoms, belonging depends on knowing a real person made this. The agent boosts signal; it never makes the art.'},
+      {t:'msg',av:'#46a36b',name:'community',time:'now',text:'this made me cry · sharing with credit? 🙏 · the lighting 😭'},
+      {t:'msg',av:'#c98a5e',name:'army-mom',time:'DM',text:'hey… I’ve been going through something similar. your art said it for me. thank you 💜'},
+      {t:'sys',text:'The Companion and Booster agents ran in sequence — private re-entry, then amplified expression. The creative act became a bridge back into connection. Belonging, scaffolded but never synthesized.'}
+    ]
+  },
+  { /* 3 — Boundary & Integrity */
+    accent:'#e84c4c',
+    cat:'Moderation',
+    channels:[['general',false],['ticket-help',false],['mod-only 🔒',true],['DM · members',false]],
+    chTitle:'mod-only', chSub:'Boundary & Integrity Agent · protecting the space',
+    title:'Vignette 3 — “Protecting the space”',
+    steps:[
+      {t:'sys',text:'A 15k-member server, 8 volunteer mods. Before a tour announcement, activity surges — and so does a wave of fraudulent ticket-resale accounts that joined in the last 48 hours.'},
+      {t:'agent',role:'Detector Agent',name:'Boundary Agent',text:'Quiet boundary work flag: I’ve detected coordinated activity that would be hard to spot across thousands of messages.',evidence:[['Accounts','17, created in a narrow window'],['Behavior','near-identical ticket posts, multi-channel'],['Escalation','DMs to members seeking tickets']]},
+      {t:'agent',role:'Threat Intelligence Agent',name:'Boundary Agent',text:'Structured evidence brief for the mod team — I’m not acting on my own. Here’s the rule it appears to violate and a precedent from a similar incident 6 months ago.',attach:{label:'📋 Evidence brief → mod-only',cap:'Accounts · timing pattern · message-similarity scores · rule: no unauthorized resale · precedent: handled via removal + advisory'}},
+      {t:'agent',role:'Bias Check',name:'Boundary Agent',text:'Before you act: 3 of the 17 accounts use non-English language patterns. Review these individually — base flags on behavior (timing, templates, DM escalation), not linguistic style.',biascheck:true,note:'Built-in audit so detection can’t disproportionately target non-native speakers or marginalized members.'},
+      {t:'msg',av:'#5865f2',name:'Mod team',time:'now',text:'Reviewed. Removing 14 with unambiguous evidence, flagging 3 for observation. 👍'},
+      {t:'agent',role:'Explainer / Writer',name:'Boundary Agent',text:'Drafted (for you to edit): a behavior-focused notice that avoids public blame, plus a community advisory framed as care — “here’s how to exchange tickets safely,” no named accounts, no spectacle.',attach:{label:'✍️ Two drafts',cap:'1) Private notice to removed accounts  ·  2) Community advisory (mods edit & post)'}},
+      {t:'sys',text:'Follow-up: the agent privately warned the 12 members who got scam DMs, and updated its detection using the mods’ judgment — a learning loop so its boundaries evolve with the community. Evidence first, human judgment second, community-framed response last.'}
+    ]
+  }
+];
+
+/* ============ RENDER / STEPPER ============ */
+let cur=0, shown=0;
+const log=document.getElementById('log');
+const chanList=document.getElementById('chanList');
+const catLabel=document.getElementById('catLabel');
+const chTitle=document.getElementById('chTitle');
+const chSub=document.getElementById('chSub');
+const prog=document.getElementById('prog');
+const nextBtn=document.getElementById('nextBtn');
+const resetBtn=document.getElementById('resetBtn');
+
+function avatar(color,initial){return `<div class="av" style="background:${color}">${initial}</div>`;}
+
+function renderChannels(s){
+  catLabel.textContent=s.cat;
+  chanList.innerHTML=s.channels.map(c=>{
+    const isDM=c[0].startsWith('DM');
+    const icon=isDM?'@':'#';
+    return `<div class="dc-ch ${c[1]?'active':''}"><span class="h">${icon}</span>${c[0].replace('DM · ','')}</div>`;
+  }).join('');
+}
+
+function stepHTML(st,accent){
+  if(st.t==='sys'){
+    return `<div class="dc-scenetitle">— ${st.text} —</div>`;
+  }
+  if(st.t==='msg'){
+    let extra='';
+    if(st.attach) extra=`<div class="attach"><div class="imgph">${st.attach.label}</div><div class="cap">${st.attach.cap}</div></div>`;
+    return `<div class="msg">${avatar(st.av,st.name[0])}<div class="body"><div class="name">${st.name}<span class="time">${st.time||''}</span></div><div class="text">${st.text}</div>${extra}</div></div>`;
+  }
+  // agent
+  let inner=`<div class="agentcard" style="--ac:${accent}"><div class="role">⬡ ${st.role}</div><div class="ctext">${st.text}</div>`;
+  if(st.attach) inner+=`<div class="attach"><div class="imgph">${st.attach.label}</div><div class="cap">${st.attach.cap}</div></div>`;
+  if(st.evidence){inner+='<div class="evidence">'+st.evidence.map(e=>`<div class="row"><span class="k">${e[0]}</span><span class="v">${e[1]}</span></div>`).join('')+'</div>';}
+  if(st.biascheck){inner+=`<div class="biaschk">⚖️ Bias check active — flags reviewed for disproportionate impact before any action.</div>`;}
+  if(st.opts){inner+='<div class="opts">'+st.opts.map(o=>`<span class="opt ${o[1]?'primary':''}">${o[0]}</span>`).join('')+'</div>';}
+  if(st.note){inner+=`<div class="note"><b>ℹ</b><span>${st.note}</span></div>`;}
+  inner+='</div>';
+  return `<div class="msg">${avatar(accent,'⬡')}<div class="body"><div class="name">${st.name}<span class="botbadge">AGENT</span><span class="time">now</span></div>${inner}</div></div>`;
+}
+
+function loadScene(i){
+  cur=i; shown=0;
+  const s=scenes[i];
+  renderChannels(s);
+  chTitle.textContent=s.chTitle; chSub.textContent=s.chSub;
+  log.innerHTML=`<div class="dc-scenetitle" style="color:${s.accent};font-weight:700;letter-spacing:.04em;">${s.title}</div>`;
+  document.documentElement.style.setProperty('--ac',s.accent);
+  advance();
+  document.querySelectorAll('.ptab').forEach((b,idx)=>b.classList.toggle('active',idx===i));
+}
+
+function advance(){
+  const s=scenes[cur];
+  if(shown>=s.steps.length) return;
+  log.insertAdjacentHTML('beforeend', stepHTML(s.steps[shown], s.accent));
+  shown++;
+  log.scrollTop=log.scrollHeight;
+  prog.textContent=`Step ${shown} / ${s.steps.length}`;
+  nextBtn.disabled = shown>=s.steps.length;
+  nextBtn.textContent = shown>=s.steps.length ? 'Scenario complete ✓' : 'Next step →';
+}
+
+/* Inline prototype replaced by the live, deployed app embedded above. */
+</script>
+</body>
+</html>
